@@ -1,0 +1,17 @@
+# IDE files
+.vscode/
+
+# Node artifact files
+node_modules/
+# Log files
+/logs
+# Unit test reports
+/coverage
+
+# Local dev files
+.DS_Store
+dump.rdb
+nohup.out
+
+config/config.json
+config/config.*.json

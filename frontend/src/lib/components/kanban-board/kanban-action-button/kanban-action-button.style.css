@@ -1,0 +1,14 @@
+.kanban-action-button{
+    background-color: #DAE4FD;
+    border-radius: 0.8rem;
+    color: #2F80ED;
+    padding: 0.8rem 1.3rem;
+    cursor: pointer;
+    border: none;
+    width: 100%;
+    text-align: start;
+}
+
+.kanban-action-button path{
+    stroke:#2f80ed;
+}

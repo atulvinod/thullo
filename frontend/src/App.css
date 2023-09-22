@@ -1,0 +1,240 @@
+.mt-5 {
+    margin-top: 0.5rem;
+}
+
+.mt-10 {
+    margin-top: 1rem;
+}
+
+.mt-21 {
+    margin-top: 2.1rem;
+}
+
+.mb-22 {
+    margin-bottom: 2.2rem;
+}
+
+.mb-14 {
+    margin-bottom: 1.4rem;
+}
+
+.my-12 {
+    margin-top: 1.2rem;
+    margin-bottom: 1.2rem;
+}
+
+.mt-16 {
+    margin-top: 1.6rem;
+}
+
+.ml-13 {
+    margin-left: 1.3rem;
+}
+
+.ml-10{
+    margin-left: 1rem;
+}
+
+.mr-10{
+    margin-right: 1rem;
+}
+
+.mr-13 {
+    margin-right: 1.3rem;
+}
+
+.mr-5 {
+    margin-right: 0.5rem;
+}
+
+.mr-8{
+    margin-right: 0.8rem;
+}
+
+.mt-9 {
+    margin-top: 0.985rem;
+}
+
+.mt-13 {
+    margin-top: 1.3rem;
+}
+
+.mt-14{
+    margin-top: 1.4rem;
+}
+
+.mt-24 {
+    margin-top: 2.4rem;
+}
+
+.mt-25{
+    margin-top: 2.5rem;
+}
+
+.mt-20 {
+    margin-top: 2rem;
+}
+
+.mt-18 {
+    margin-top: 1.8rem;
+}
+
+.mt-16 {
+    margin-top: 1.6rem;
+}
+
+.mt-12 {
+    margin-top: 1.2rem;
+}
+
+.ml-8{
+    margin-left: 0.8rem;
+}
+
+.fnt-12 {
+    font-size: 1.2rem;
+}
+
+.fnt-16 {
+    font-size: 1.6rem;
+}
+
+.fnt-10 {
+    font-size: 1rem;
+}
+
+.fnt-8{
+    font-size: 0.8rem;
+}
+
+.mt-27 {
+    margin-top: 2.75rem;
+}
+
+.fnt-wt-700 {
+    font-weight: 700;
+}
+
+.fnt-wt-600 {
+    font-weight: 600;
+}
+
+.fnt-wt-400 {
+    font-weight: 400;
+}
+
+.fnt-wt-500{
+    font-weight: 500;
+}
+
+.d-flex {
+    display: flex;
+}
+
+.d-align-items-center {
+    align-items: center;
+}
+
+.d-justify-content-center {
+    justify-content: center;
+}
+
+.d-justify-content-space-between {
+    justify-content: space-between;
+}
+
+.d-flex-dir-row {
+    flex-direction: row;
+}
+
+.d-align-items-flex-end {
+    align-items: flex-end;
+}
+
+.d-justify-content-flex-end {
+    justify-content: flex-end;
+}
+
+.mr-44 {
+    margin-right: 4.4rem;
+}
+
+.mr-22 {
+    margin-right: 2.2rem;
+}
+
+.flex-1 {
+    flex: 1;
+}
+
+.mr-11 {
+    margin-right: 1.1rem;
+}
+
+.mr-15{
+    margin-right: 1.5rem;
+}
+
+form .form-input-container {
+    margin-top: 2.5rem;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.h-100 {
+    height: 100%;
+}
+
+.d-flex-wrap {
+    flex-wrap: wrap;
+}
+
+.d-gap-4 {
+    gap: 0.4rem;
+}
+
+.d-gap-12{
+    gap: 1.2rem;
+}
+
+.app-component-container {
+    border-radius: 1.2rem;
+    border: 1px solid #e0e0e0;
+    background: #fff;
+    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.1);
+}
+
+.p-13{
+  padding: 1.3rem;
+}
+
+.text-color-grey{
+    color: #bdbdbd;
+}
+
+.text-color-white{
+    color: #fff;
+}
+
+.text-color-darkgrey{
+    color: #4f4f4f;
+}
+
+.fnt-14{
+    font-size: 1.4rem;
+}
+
+.w-12{
+    width: 1.2rem;
+}
+
+.h-12{
+    height: 1.2rem;
+}
+
+.b-rd-4{
+    border-radius: 0.4rem;
+}
+

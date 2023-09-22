@@ -1,0 +1,11 @@
+.info-label{
+    color: #bdbdbd;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: -0.35px;
+}
+
+.info-label-icon{
+    width: 1.2rem;
+    height: 1.2rem;
+}

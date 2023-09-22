@@ -1,0 +1,38 @@
+.input{
+    border: none;
+    padding: 0.9rem 1.312rem;
+    width: 100%;
+}
+
+.input::placeholder{
+    color: #BDBDBD;
+}
+
+.input:focus{
+    outline: none;
+}
+
+.form-input-container{
+    border-radius: 0.8rem;
+    overflow:hidden;
+    filter: drop-shadow(0px 4px 12px rgba(0, 0, 0, 0.10));
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-input-container:focus{
+    border:none
+}
+
+.errors{
+    margin-left: 0.5rem;
+    margin-top: 0.5rem;
+    color: red;
+}
+
+.form-label{
+    margin-left: 0.5rem;
+    padding-bottom: 0.5rem;
+    font-size: 1.2rem;
+}

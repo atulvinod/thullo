@@ -1,0 +1,61 @@
+.user-nav-link-container {
+    display: flex;
+}
+
+.user-nav-link-container span {
+    font-size: 1.5rem;
+    margin-left: 1rem;
+}
+
+
+
+.user-profile-container {
+    position: relative;
+    align-items: center;
+}
+
+.name-tag {
+    margin-right: 1.941rem;
+}
+
+.chevron {
+    width: 0.7rem;
+    cursor: pointer;
+}
+
+.user-profile-actions-container.dropdown-open {
+    height: 4rem;
+}
+
+.user-profile-actions-container.dropdown-closed {
+    height: 0rem;
+    border-width: 0;
+}
+
+.user-profile-actions-container {
+    position: absolute;
+    top: 5rem;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 0 0 0.8rem 0.8rem;
+    border-top: none;
+    font-size: 1.2rem;
+    transition: all 0.5s ease-in-out;
+    border: 1px solid lightgrey;
+}
+
+.user-profile-actions-container span {
+    cursor: pointer;
+}
+
+.user-profile-actions {
+    margin: 1rem;
+}
+
+.rotate-chevron {
+    transform: rotate(180deg);
+}
+
+.user-nav-link-container{
+    margin-left: auto;
+}

@@ -1,0 +1,39 @@
+.kanban-board-card{
+    box-shadow: 0px 0.4rem 0.4rem 0px rgba(0, 0, 0, 0.05);
+    border-radius: 1.2rem;
+    margin-bottom: 2.4rem;
+    border: 1px solid lightgrey;
+    cursor: move;
+    padding: 1.2rem;
+    transition: all 0.3s;
+    position: relative;
+}
+
+.kanban-board-card-ondrag{
+    border: 1px dashed #2F80ED;
+    background: #E2E8F6;
+    position: absolute;
+    top: 0;
+    height: 100%;
+    z-index: 2;
+    width: 100%;
+    left: 0;
+    border-radius: 0.8rem;
+}
+
+.kanban-board-card-title{
+    color: #000;
+font-size: 1.6rem;
+font-style: normal;
+font-weight: 400;
+line-height: normal;
+letter-spacing: -0.56px;
+}
+
+.kanban-board-card:hover{
+    transform: scale(1.05);
+}
+
+.kanban-card-cover{
+    background-size: cover !important;
+}

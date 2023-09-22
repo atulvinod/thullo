@@ -1,0 +1,19 @@
+.all-boards-page-container {
+    margin: 6.69rem 19.8rem;
+}
+
+.all-boards-heading {
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: -0.063rem;
+}
+
+.all-boards-heading-container {
+    margin-bottom: 4.3rem;
+}
+
+.all-boards-cards-container {
+    display: grid;
+    gap: 4.2rem;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}

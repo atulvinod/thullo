@@ -1,0 +1,26 @@
+.user-page-container{
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.user-form-container {
+    border-left: 1px solid rgba(0, 0, 0, 0.10);
+    padding: 5rem;
+    width: 35%;
+}
+
+.user-error{
+    color: red;
+    margin-top: 2rem;
+}
+
+.user-button-container {
+    display:flex;
+    flex-direction: row;
+    margin-top: 2rem;
+}
+
+.user-button-container  button {
+    margin-right: 1rem;
+}

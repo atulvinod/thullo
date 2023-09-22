@@ -1,0 +1,18 @@
+.user-found-container{
+    border-radius: 0.8rem;
+    border: 1px solid lightgrey;
+    padding: 0.9rem;
+}
+
+.user-found-container .users-found:not(:first-child) {
+    margin-top: 1rem;
+}
+
+.users-found{
+    cursor: pointer;
+    border-radius: 0.8rem;
+}
+
+.user-selected{
+    background-color: #2f80ed;
+}

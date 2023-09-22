@@ -1,0 +1,8 @@
+{
+    "unsplash_api_key": "FNyywR9UaPgMSVaGo_oSdT0EaWXRSfIhEGQh12_nqPM",
+    "environments": {
+        "local": {
+            "base_url": "http://localhost:5500/v1"
+        }
+    }
+}

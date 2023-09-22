@@ -1,0 +1,20 @@
+.kanban-board-columns-container{
+    display: flex;
+    flex-direction: row;
+    list-style-type: none;
+}
+
+.kanban-board-columns-container li{
+    padding: 0 1.6rem 3.2rem 1.6rem;
+    width: 25rem; 
+}
+
+.kanban-board-container{
+    margin: 4.269rem 2.1rem;
+}
+
+.board-members-container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}

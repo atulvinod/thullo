@@ -1,0 +1,51 @@
+image: node:lts #Node active LTS
+
+default:
+  tags: #Run on runner with docker and server tag
+    - docker
+    - server
+
+stages:
+  - build
+  - audit
+  - test
+
+installModules:
+  stage: build
+  script:
+    - npm ci --prefer-offline --no-audit #Install packages. Fails for package-lock.json not present
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+    policy: push
+
+auditModules:
+  stage: audit
+  script:
+    - npm audit --audit-level=high #Audit installed packages for vulnerabilities and fail for high and above
+    - npx npm-check-updates #Print available updates to installed packages
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+    policy: pull
+
+unitTests:
+  stage: test
+  script:
+    - npm run test:ci
+  coverage: '/\s*Branches\s*:\s*(\d+\.\d+)%/' #Reporting branch coverage as overall
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+    policy: pull
+  artifacts:
+    when: on_success
+    expose_as: 'unitTestReport'
+    paths: 
+      - coverage/junit.xml
+    reports:
+      junit:
+        - coverage/junit.xml

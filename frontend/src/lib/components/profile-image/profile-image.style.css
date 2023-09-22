@@ -1,0 +1,36 @@
+.profile-image-container {
+    width: 3.2rem;
+    height: 3.2rem;
+    border-radius: 1rem;
+    background-color: #BDBDBD;
+    overflow: hidden;
+}
+
+.profile-image {
+    width: 100%;
+}
+
+.user-initials {
+    color: #fff;
+    text-align: center;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: -0.42px;
+}
+
+.user-initials-container{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.profile-image-tooltip{
+    border: 1px solid #E0E0E0;
+    border-radius: 0.8rem;
+    background: #FFF;
+    box-shadow: 0px 0.2rem 0.4rem 0px rgba(0, 0, 0, 0.05);
+    padding: 0.1rem 0.4rem;
+}

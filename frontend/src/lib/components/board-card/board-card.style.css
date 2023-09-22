@@ -1,0 +1,35 @@
+.board-card-container {
+    min-height: 23.4rem;
+    width: 100%;
+    border-radius: 1.2rem;
+    box-shadow: 0px 0.4rem 1.2rem 0px rgba(0, 0, 0, 0.05);
+    background-color: #fff;
+    padding: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+}
+
+.board-card-container:hover {
+    transform: scale(1.05);
+}
+
+.board-image-container {
+    height: 13rem;
+    outline: 1px solid #f2f2f2;
+}
+
+.board-card-heading {
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: -0.56px;
+}
+
+.no-cover-image-container {
+    outline: 1px solid #f2f2f2;
+    border-radius: 1.2rem;
+}

@@ -1,0 +1,53 @@
+.user-image-input-container {
+    width: 15rem;
+    height: 15rem;
+    background-color: rgb(0,0,0,.1);
+    border-radius: 0.8rem;
+    display: flex;
+    align-items:center;
+    justify-content: center;
+    background-size: contain !important;
+}
+
+.user-image-input-container img{
+    height: 5rem;
+    width: 5rem;
+}
+
+.user-image-input-container:hover{
+    cursor: pointer;
+}
+
+.cropped-image-preview {
+    width: 50rem;
+    height: 50rem;
+}
+
+.crop-content-container{
+    display: flex;
+}
+
+.crop-preview-container{
+    margin-left: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin-top: 5rem;
+}
+
+.crop-preview-container button{
+    margin-top: 0.5rem;
+    width: fit-content;
+}
+
+.preview-canvas{
+    width: 15rem;
+    height: 15rem;
+    border-radius: 0.8rem;
+    border: 1px solid black;
+    object-fit: contain;
+}
+
+.mt-2{
+    margin-top: 2rem;
+}

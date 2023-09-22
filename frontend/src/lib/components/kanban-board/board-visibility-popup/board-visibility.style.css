@@ -1,0 +1,26 @@
+.board-visibility-container{
+    padding: 1.2rem 0rem;      
+}
+
+.board-visibility-action-container{
+    padding: 1.2rem;
+    border-radius: 0.8rem;
+    cursor: pointer;
+}
+.visibility-selected{
+background: #F2F2F2;
+}
+
+.visibility-subheading{
+    color: #828282;
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: -0.35px;
+}
+
+.visibility-heading{
+    color:#4f4f4f;
+    font-size: 1.2rem;
+    font-size: 500;
+    letter-spacing: -0.42px;
+}

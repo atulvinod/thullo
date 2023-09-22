@@ -1,95 +1,97 @@
-CREATE TABLE users (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    name TEXT NOT NULL,
-    image_url TEXT,
-    password TEXT NOT NULL,
-    email TEXT NOT NULL,
-    created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-);
+CREATE DATABASE `thullodb`; /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */
 
-CREATE TABLE boards (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-created_by_user_id INT NOT NULL,
-cover_url TEXT NULL,
-    board_title TEXT NOT NULL,
-    created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    is_private BOOLEAN NOT NULL DEFAULT FALSE
-);
+CREATE TABLE `thullodb`.`board_columns` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `column_title` text NOT NULL,
+  `created` datetime DEFAULT CURRENT_TIMESTAMP,
+  `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `board_id` int NOT NULL,
+  `column_order_index` tinyint NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
-create table board_columns (
-    id int PRIMARY KEY AUTO_INCREMENT not null,
-board_id INT NOT NULL,
-column_order_index TINYINT DEFAULT 1 NOT NULL,
-    column_title text not null,
-    created datetime default CURRENT_TIMESTAMP,
-    modified datetime not null default current_timestamp on UPDATE CURRENT_TIMESTAMP
-);
+CREATE TABLE `thullodb`.`board_members` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `board_id` int NOT NULL,
+  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
-create table card(
-    id int primary key AUTO_INCREMENT not null,
-    card_name text not null,
-    card_description text not null,
-column_id int not null,
-board_id int not null,
-cover_image_url text null,
-    created datetime default CURRENT_TIMESTAMP not null,
-    modified datetime not null default CURRENT_TIMESTAMP on update current_timestamp
-);
+CREATE TABLE `thullodb`.`boards` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `board_title` text NOT NULL,
+  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `is_private` tinyint(1) NOT NULL DEFAULT '0',
+  `created_by_user_id` int NOT NULL,
+  `cover_url` text,
+  `description` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
-create table card_labels (
-    id int primary key not null AUTO_INCREMENT,
-    card_id int not null,
-    label_name text not null,
-    label_color varchar(100) not null,
-    created datetime not null default current_timestamp,
-    modified datetime not null default CURRENT_TIMESTAMP on update current_timestamp
-);
+CREATE TABLE `thullodb`.`card` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `card_name` text NOT NULL,
+  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `column_id` int NOT NULL,
+  `board_id` int NOT NULL,
+  `card_description` text,
+  `cover_image_url` text,
+  `column_order` tinyint NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
-CREATE TABLE board_members (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT NOT NULL,
-    board_id INT NOT NULL,
-    created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+CREATE TABLE `thullodb`.`card_attachments` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `attachment_url` text NOT NULL,
+  `attachment_type` varchar(100) NOT NULL,
+  `card_id` int NOT NULL,
+  `attachment_title` text NOT NULL,
+  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
-CREATE TABLE card_members (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT NOT NULL,
-    board_id INT NOT NULL,
-    card_id INT NOT NULL,
-    created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+CREATE TABLE `thullodb`.`card_comments` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `card_id` int NOT NULL,
+  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `comment` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
-CREATE TABLE card_comments(
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT NOT NULL,
-    card_id INT NOT NULL,
-    comment text not null,
-    created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+CREATE TABLE `thullodb`.`card_labels` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `card_id` int NOT NULL,
+  `label_name` text NOT NULL,
+  `label_color` varchar(100) NOT NULL,
+  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
-CREATE TABLE card_attachments(
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT NOT NULL,
-    attachment_url text not null,
-    attachment_type varchar(100) not null,
-    card_id INT NOT NULL,
-    attachment_title text not null,
-    created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
-create table card_comments(
-    id int primary key AUTO_INCREMENT,
-    user_id int not null,
-    card_id int not null,
-    created datetime not null default current_timestamp,
-    modified datetime not null default current_timestamp on update CURRENT_TIMESTAMP,
-    comment text not null
-);
+CREATE TABLE `thullodb`.`card_members` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `card_id` int NOT NULL,
+  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
-alter table card add column column_order tinyint not null default 1;
+CREATE TABLE `thullodb`.`users` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `name` varchar(500) NOT NULL,
+  `image_url` text,
+  `password` text NOT NULL,
+  `email` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci

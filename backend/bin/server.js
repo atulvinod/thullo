@@ -1,11 +1,10 @@
 const app = require("../app");
-const config = require("../config/config.json");
 const appProcess = require("../util/appProcessUtility");
 const http = require("http");
 
 
 //Get port from environment and store in Express
-const port = isNaN(process.env.PORT) ? config.port : Number(process.env.PORT);
+const port = isNaN(process.env.PORT) ? '5000' : process.env.PORT;
 app.set("port", `${port}`);
 
 //Create an HTTP server

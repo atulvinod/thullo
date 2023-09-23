@@ -53,7 +53,7 @@ function getSpecValidator(specs) {
                 componentValidationErrors = validateData(specs[key], req[key]);
             }
             if (componentValidationErrors.length > 0) {
-                if (global.config.env === "DEV") {
+                if (process.env.ENV.toLocaleLowerCase() === "dev") {
                     //Maintaining all errors for DEV environment
                     validationErrors.push(...componentValidationErrors);
                 } else {

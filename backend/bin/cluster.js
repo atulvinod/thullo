@@ -1,13 +1,12 @@
 const cluster = require("cluster");
 const os = require("os");
-const config = require("../config/config.json");
 
 
 if (cluster.isMaster) {
     console.log(`Master ${process.pid} is running`);
 
     const numOfCpus = os.cpus().length;
-    const requiredInstances = config.clusterSettings?.instanceCount || numOfCpus;
+    const requiredInstances = process.env.CLUSTER_SETTINGS__INSTANCE_COUNT || numOfCpus;
 
     const numOfWorkers = Math.min(numOfCpus, requiredInstances);
 

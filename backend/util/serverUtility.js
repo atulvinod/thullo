@@ -8,7 +8,7 @@ const _logger = require('../lib/logger');
  * Returns middleware for logging access logs
  */
 function accessLogger() {
-    const logDirectory = path.join(global.config.logSettings.path, 'accessLogs');
+    const logDirectory = path.join(process.env.LOG_SETTINGS__PATH, 'accessLogs');
     common.makeDirectoryIfNotPresent(logDirectory);
 
     const logStream = fsr.getStream({

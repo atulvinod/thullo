@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 
 require('./config/globals');
+require('./util/commonUtility').validateENV();
 
 const boards = require('@src/routes/boards');
 const userRouter = require('@src/routes/user');
@@ -18,10 +19,10 @@ const cors = require('cors');
 const database = require('@lib/database');
 
 // Init app components (conditionally)
-common.isSet(global.config.redisSettings) && global.redis.connect();
+common.isSet(process.env.REDIS_SETTINGS__HOST) && global.redis.connect();
 
 // Expose metrics if prometheus client is enabled
-common.isTrue(global.config.enablePrometheusClient) && app.use('/metrics', global.prometheus.requestHandler);
+common.isTrue(process.env.ENABLE_PROMETHEUS_CLIENT) && app.use('/metrics', global.prometheus.requestHandler);
 
 
 app.use(cors());

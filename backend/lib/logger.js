@@ -5,8 +5,9 @@ const log4js = require("log4js");
 const stackTrace = require("stack-trace");
 const util = require('util');
 
-const isTrackLogsEnabled = global.config.logSettings.enableTrackingLogs;
-const isDevEnvironment = (global.config.env === "DEV");
+const isTrackLogsEnabled = process.env.LOG_SETTINGS__ENABLE_TRACKING_LOGS;
+const isDevEnvironment = (process.env.ENV === "DEV");
+const common = require('../util/commonUtility');
 
 const { appLogger, curlLogger, trackLogger } = initLoggers();
 
@@ -95,8 +96,8 @@ function configureAppenders() {
  * @returns
  */
 function getLoggerConfiguration() {
-    const appAppender = getAppLogAppender(global.config.appName, "appLog");
-    const curlAppender = getAppLogAppender(`curl_${global.config.appName}`, "curlLog");
+    const appAppender = getAppLogAppender(process.env.APP_NAME, "appLog");
+    const curlAppender = getAppLogAppender(`curl_${process.env.APP_NAME}`, "curlLog");
     let config = {
         appenders: { app: appAppender, curl: curlAppender },
         categories: { 
@@ -116,7 +117,7 @@ function getLoggerConfiguration() {
     if (isDevEnvironment) {
         const consoleAppender = getConsoleLogAppender();
         config.appenders.console = consoleAppender;
-        config.categories.console = { appenders: ["console"], level: global.config.logSettings.consoleLogLevel }
+        config.categories.console = { appenders: ["console"], level: process.env.LOG_SETTINGS__CONSOLE_LOG_LEVEL }
     }
 
     return config;
@@ -129,7 +130,7 @@ function getLoggerConfiguration() {
  * @returns 
  */
  function getAppLogAppender(fileName, layoutType) {
-    const logDirectory = path.join(global.config.logSettings.path, "appLogs");
+    const logDirectory = path.join(process.env.LOG_SETTINGS__PATH, "appLogs");
     common.makeDirectoryIfNotPresent(logDirectory);
 
     //Size-based rotation
@@ -178,7 +179,7 @@ function getLogAppender(directory, fileName, appenderType, additionalOptions, la
  * @returns
  */
 function getTrackingLogAppender() {
-    const logDirectory = path.join(global.config.logSettings.path, "trackLogs");
+    const logDirectory = path.join(process.env.LOG_SETTINGS__PATH, "trackLogs");
     const fileName = "tracking";
     const layoutType = "trackLog";
     common.makeDirectoryIfNotPresent(logDirectory);

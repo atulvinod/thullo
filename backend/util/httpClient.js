@@ -1,42 +1,50 @@
-const { default: axios, AxiosRequestConfig, AxiosResponse } = require("axios");
-const axiosRetry = require("axios-retry");
-const stackTrace = require("stack-trace");
-const commonUtility = require("./commonUtility");
-
+const { default: axios, AxiosRequestConfig, AxiosResponse } = require('axios');
+const axiosRetry = require('axios-retry');
+const stackTrace = require('stack-trace');
+const commonUtility = require('./commonUtility');
 
 const HEADERS = {
     CONTENT_TYPE: {
         JSON: 'application/json',
-        FORM_URL_ENCODED: 'application/x-www-form-urlencoded'
-    }
-}
+        FORM_URL_ENCODED: 'application/x-www-form-urlencoded',
+    },
+};
+
+const HTTP_CLIENT_SETTINGS = {
+    timeoutInMs: process.env.HTTP_SETTINGS__TIMEOUT_IN_MS,
+    retryCont: process.env.HTTP_SETTINGS__RETRY_COUNT,
+    retryDelayInMs: process.env.HTTP_SETTINGS__RETRY_DELAY_IN_MS,
+    logRequestHeaders: process.env.HTTP_SETTINGS__LOG_REQUEST_HEADERS,
+};
 
 /**
  * Processes a POST request and returns the `response`, if received
- * @param {*} logger 
- * @param {string} url 
- * @param {JSON} headers 
- * @param {*} data 
+ * @param {*} logger
+ * @param {string} url
+ * @param {JSON} headers
+ * @param {*} data
  * @param {{timeoutInMs?: number, retryCount?: number, retryDelayInMs?: number}} config - defaults to `null`
  */
 async function postRequest(logger, url, data, headers = null, config = null) {
-    return (await _request(logger, url, "POST", data, headers, config));
+    return (await _request(logger, url, 'POST', data, headers, config));
 }
 
 /**
  * Sends a request to the given `url` with provided `headers` and `data` and returns the `response`, if received
- * @param {*} logger 
- * @param {string} url 
+ * @param {*} logger
+ * @param {string} url
  * @param {"GET"|"POST"|"DELETE"|"HEAD"|"OPTIONS"|"PUT"|"PATCH"} method
  * @param {*} data
- * @param {JSON|null} headers 
+ * @param {JSON|null} headers
  * @param {{timeoutInMs?: number, retryCount?: number, retryDelayInMs?: number}} config
  */
 async function _request(logger, url, method, data, headers, config) {
     try {
-        const trace = stackTrace.get()[2]; //Passing stack trace for calling function
+        const trace = stackTrace.get()[2]; // Passing stack trace for calling function
         const client = _getRetryClient(logger, url, config, trace);
-        const response = await client.request({ url: url, method: method, headers: headers || {} , data: data });
+        const response = await client.request({
+            url, method, headers: headers || {}, data,
+        });
         return response;
     } catch (error) {
         logger.error(`Error occurred while sending request to ${url}: ${error}`);
@@ -45,20 +53,20 @@ async function _request(logger, url, method, data, headers, config) {
 
 /**
  * Creates and returns a retry client set basis the config
- * @param {*} logger 
- * @param {string} requestUrl 
+ * @param {*} logger
+ * @param {string} requestUrl
  * @param {{timeoutInMs?: number, retryCount?: number, retryDelayInMs?: number}} requestConfig
  * @param {stackTrace.StackFrame} stackTrace
  */
 function _getRetryClient(logger, requestUrl, requestConfig, stackTrace) {
-    const clientSettings = {...global.config.httpClientSettings, ...requestConfig};
+    const clientSettings = { ...HTTP_CLIENT_SETTINGS, ...requestConfig };
     const axiosClient = _getAxiosClient(logger, clientSettings.timeoutInMs, stackTrace);
 
     axiosRetry(axiosClient, {
         retries: Number(clientSettings.retryCount),
-        retryDelay: () => { return clientSettings.retryDelayInMs },
-        retryCondition: _retryCondition.bind({ logger: logger, url: requestUrl }),
-        shouldResetTimeout: true
+        retryDelay: () => clientSettings.retryDelayInMs,
+        retryCondition: _retryCondition.bind({ logger, url: requestUrl }),
+        shouldResetTimeout: true,
     });
 
     return axiosClient;
@@ -67,7 +75,7 @@ function _getRetryClient(logger, requestUrl, requestConfig, stackTrace) {
 /**
  * Creates and returns a new Axios instance
  * @param {*} logger
- * @param {number} timeoutInMs 
+ * @param {number} timeoutInMs
  * @param {stackTrace.StackFrame} stackTrace
  */
 function _getAxiosClient(logger, timeoutInMs, stackTrace) {
@@ -91,42 +99,43 @@ function _getAxiosClient(logger, timeoutInMs, stackTrace) {
 }
 
 /**
- * Interceptor for Axios HTTP request 
- * @param {*} logger 
- * @param {AxiosRequestConfig} config 
- * @param {stackTrace.StackFrame} stackTrace 
+ * Interceptor for Axios HTTP request
+ * @param {*} logger
+ * @param {AxiosRequestConfig} config
+ * @param {stackTrace.StackFrame} stackTrace
  */
- function _requestInterceptor(logger, config, stackTrace) {
+function _requestInterceptor(logger, config, stackTrace) {
     canonicalLog.incrementApiCounter(logger);
     config.metaData = config.metaData || {};
     config.metaData.requestStartTime = Date.now();
     config.metaData.id = commonUtility.getUuid();
-    let message = `Sending ${config.method.toUpperCase()} request to URL: ${config.baseURL ? (config.baseURL + config.url): config.url} with ID: ${config.metaData.id}`;
-    logger.info(message, {trace: stackTrace});
-    config.data && (message += `, Data: ${typeof config.data === "object"? JSON.stringify(config.data) : config.data.toString()}`);
+    let message = `Sending ${config.method.toUpperCase()} request to URL: ${config.baseURL ? (config.baseURL + config.url) : config.url} with ID: ${config.metaData.id}`;
+    logger.info(message, { trace: stackTrace });
+    config.data && (message += `, Data: ${typeof config.data === 'object' ? JSON.stringify(config.data) : config.data.toString()}`);
     config.params && (message += `, Params: ${JSON.stringify(config.params)}`);
     logger.curlLog(message, stackTrace);
 }
 
 /**
- * Interceptor for Axios HTTP response 
- * @param {*} logger 
- * @param {AxiosResponse} response 
- * @param {stackTrace.StackFrame} stackTrace 
+ * Interceptor for Axios HTTP response
+ * @param {*} logger
+ * @param {AxiosResponse} response
+ * @param {stackTrace.StackFrame} stackTrace
  */
 function _responseInterceptor(logger, response, stackTrace) {
     response.config.metaData.responseTime = Date.now() - response.config.metaData.requestStartTime;
-    const responseDataLog = typeof response.data === "object" ? JSON.stringify(response.data) : response.data;
-    logger.httpLog({ url: response.config.url, id: response.config.metaData.id, responseTimeInMs: response.config.metaData.responseTime, statusCode: response.status });
-    let message = `Response received for request ID ${response.config.metaData.id} in ${response.config.metaData.responseTime} ms - Status: ${response.status}`;
-    logger.info(message, {trace: stackTrace});
+    const responseDataLog = typeof response.data === 'object' ? JSON.stringify(response.data) : response.data;
+    logger.httpLog({
+        url: response.config.url, id: response.config.metaData.id, responseTimeInMs: response.config.metaData.responseTime, statusCode: response.status,
+    });
+    const message = `Response received for request ID ${response.config.metaData.id} in ${response.config.metaData.responseTime} ms - Status: ${response.status}`;
+    logger.info(message, { trace: stackTrace });
     logger.curlLog(`${message} with Data: ${responseDataLog}, Headers: ${JSON.stringify(response.headers)}`, stackTrace);
 }
 
-
 /**
  * Returns condition for retrying the request
- * @param {Error} error 
+ * @param {Error} error
  */
 function _retryCondition(error) {
     this.logger.error(`HTTP request to ${this.url} failed with error: ${error.stack ? error.stack : error}`);
@@ -135,5 +144,5 @@ function _retryCondition(error) {
 
 module.exports = {
     HEADERS,
-    postRequest
-}
+    postRequest,
+};

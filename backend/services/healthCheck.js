@@ -1,9 +1,10 @@
 const db = require('../lib/database');
+const common = require('../util/commonUtility');
 
 module.exports = async function(req, res, logger) {
     let healthStatus = {};
 
-    if (common.isSet(global.config.redisSettings)) {
+    if (common.isSet(process.env.REDIS_SETTINGS__HOST)) {
         healthStatus["redis"] = await global.redis.validateConnection(logger);
     }
 

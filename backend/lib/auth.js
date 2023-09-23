@@ -2,20 +2,18 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const passport = require('./passport');
 
-const config = require('../config/config');
-
 function generateJWT(user_id, email) {
     const payload = { user_id, email };
-    const token = jwt.sign(payload, config.jwtAuthOptions.secretOrKey, {
-        expiresIn: config.jwtAuthOptions.expiry,
-        issuer: config.jwtAuthOptions.issuer,
-        audience: config.jwtAuthOptions.audience,
+    const token = jwt.sign(payload, process.env.JWT_AUTH_OPTIONS__SECRET_OR_KEY, {
+        expiresIn: process.env.JWT_AUTH_OPTIONS__EXPIRY,
+        issuer: process.env.JWT_AUTH_OPTIONS__ISSUER,
+        audience: process.env.JWT_AUTH_OPTIONS__AUDIENCE,
     });
     return token;
 }
 
 function generatePasswordHash(password) {
-    const hash = bcrypt.hash(password, config.authSaltRounds);
+    const hash = bcrypt.hash(password, process.env.AUTH_SALT_ROUNDS);
     return hash;
 }
 

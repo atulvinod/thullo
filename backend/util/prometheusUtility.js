@@ -2,7 +2,7 @@ const prometheus = require("prom-client");
 
 
 //Adds appName to labels for all clients, by default
-prometheus.register.setDefaultLabels({ appName: global.config.appName });
+prometheus.register.setDefaultLabels({ appName: process.env.APP_NAME });
 
 
 /**

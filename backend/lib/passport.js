@@ -3,9 +3,13 @@ const logger = require('@lib/logger').getLogger();
 const database = require('@lib/database');
 
 const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt');
-const config = require('../config/config');
 
-const opts = config.jwtAuthOptions;
+const opts = {
+    secretOrKey: process.env.JWT_AUTH_OPTIONS__SECRET_OR_KEY,
+    issuer: process.env.JWT_AUTH_OPTIONS__ISSUER,
+    audience: process.env.JWT_AUTH_OPTIONS__AUDIENCE,
+    expiry: process.env.JWT_AUTH_OPTIONS__EXPIRY,
+};
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 
 async function findUser(email) {

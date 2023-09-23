@@ -1,5 +1,5 @@
 const redis = require("redis");
-
+const common = require('../util/commonUtility');
 
 let redisClient, isClientConnected, connectionError;
 
@@ -34,12 +34,12 @@ function connect() {
  */
 function getConnectionClient() {
     let clientOptions;
-    if (global.config.redisSettings) {
+    if (process.env.REDIS_SETTINGS__HOST) {
 
         clientOptions = {
-            host: global.config.redisSettings.host,
-            port: Number(global.config.redisSettings.port),
-            auth_pass: global.config.redisSettings.password,
+            host: process.env.REDIS_SETTINGS__HOST,
+            port: Number(process.env.REDIS_SETTINGS__PORT),
+            auth_pass: process.env.REDIS_SETTINGS__AUTH_PASS,
             prefix: getPrefix(),
             retry_strategy: getRetryStrategy()
         };
@@ -54,8 +54,8 @@ function getConnectionClient() {
  * @throws for invalid key prefix
  */
 function getPrefix() {
-    if (global.config.redisSettings.keyPrefix && typeof global.config.redisSettings.keyPrefix === "string") {
-        return `${global.config.redisSettings.keyPrefix}`;
+    if (process.env.REDIS_SETTINGS__KEY_PREFIX && typeof process.env.REDIS_SETTINGS__KEY_PREFIX === "string") {
+        return `${process.env.REDIS_SETTINGS__KEY_PREFIX}`;
     } else {
         throw new Error("Key prefix must be a valid string");
     }
@@ -66,16 +66,15 @@ function getPrefix() {
  * @returns 
  */
 function getRetryStrategy() {
-    const config = global.config.redisSettings.retryStrategy;
-    if (config && common.isSet(config.retryCount) && common.isSet(config.retryDelayInMs)) {
+    if (common.isSet(process.env.REDIS_SETTINGS__RETRY_STRATEGY__RETRY_COUNT) && common.isSet(process.env.REDIS_SETTINGS__RETRY_STRATEGY__RETRY_DELAY_IN_MS)) {
         return function(options) {
-            if (config.retryCount > 0 && options.attempt > config.retryCount) {
+            if (process.env.REDIS_SETTINGS__RETRY_STRATEGY__RETRY_COUNT > 0 && options.attempt > process.env.REDIS_SETTINGS__RETRY_STRATEGY__RETRY_COUNT) {
                 //Stop retrying for a connection
                 return undefined;
             }
 
             //Retry after returned milliseconds
-            return config.retryDelayInMs;
+            return process.env.REDIS_SETTINGS__RETRY_STRATEGY__RETRY_DELAY_IN_MS;
         }
     }
 }
@@ -107,7 +106,7 @@ async function validateConnection(logger) {
  * @param {number} timeout - default `global.config.redisSettings.defaultTtl`
  * @returns {Promise<string|Error>}
  */
-function set(logger, key, value, timeout = global.config.redisSettings.defaultTtl) {
+function set(logger, key, value, timeout = process.env.REDIS_SETTINGS__DEFAULT_TTL) {
     canonicalLog.incrementRedisCounter(logger);
     return new Promise(function setWrapper(resolve, reject) {
         redisClient.set(key, value, "EX", timeout, (error, value) => {

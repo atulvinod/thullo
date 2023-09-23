@@ -2,8 +2,28 @@ const knex = require('knex');
 const stack_trace = require('stack-trace');
 const util = require('util');
 
-const config = require('@config/config');
 const canonical_log_util = require('@util/canonicalLoggingUtility');
+
+const database_configs = {
+    db: {
+        master: {
+            host: process.env.DB__CONNECTIONS__MASTER__HOST,
+            port: process.env.DB__CONNECTIONS__MASTER__PORT,
+            password: process.env.DB__CONNECTIONS__MASTER__PASSWORD,
+            database: process.env.DB__CONNECTIONS__MASTER__DATABASE,
+            username: process.env.DB__CONNECTIONS__MASTER__USERNAME,
+            maxConnections: process.env.DB__CONNECTIONS__MASTER__MAX_CONNECTIONS,
+        },
+        slave: {
+            host: process.env.DB__CONNECTIONS__SLAVE__HOST,
+            port: process.env.DB__CONNECTIONS__SLAVE__PORT,
+            password: process.env.DB__CONNECTIONS__SLAVE__PASSWORD,
+            database: process.env.DB__CONNECTIONS__SLAVE__DATABASE,
+            username: process.env.DB__CONNECTIONS__SLAVE__USERNAME,
+            maxConnections: process.env.DB__CONNECTIONS__SLAVE__MAX_CONNECTIONS,
+        },
+    },
+};
 
 /**
  * @param {string} client
@@ -22,8 +42,8 @@ function configureDsn(client, dsn_config) {
         },
         debug: false,
         pool: {
-            min: dsn_config.minConnections || 2,
-            max: dsn_config.maxConnections || 10,
+            min: dsn_config.minConnections ? Number(dsn_config.minConnections) : 2,
+            max: dsn_config.macConnections ? Number(dsn_config.maxConnections) : 10,
         },
     });
 }
@@ -47,7 +67,7 @@ class BaseDB {
     constructor(dsn, client) {
         this.#dsn = dsn;
 
-        const dsn_details = config.db.connections[dsn];
+        const dsn_details = database_configs[dsn];
         if (!dsn_details) throw new Error(`DSN details not found in config for: ${dsn}`);
         this.#raw_builder = knex({ client });
         this.#master_db = configureDsn(client, dsn_details.master);
@@ -89,7 +109,7 @@ class BaseDB {
             const time_taken = new Date() - started_at;
             started_at = undefined;
             const raw_query = this.raw(query.sql, query.bindings).toString();
-            if (query.method !== 'select' || config.db?.settings?.enableSelectQueryLogs) {
+            if (query.method !== 'select' || process.env.DB__SETTINGS__ENABLE_SELECT_QUERY_LOGS) {
                 logger.info(`${raw_query} | tt: ${time_taken}ms`, log_options);
             }
         });

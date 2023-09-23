@@ -1,4 +1,4 @@
-const isCanonicalLogEnabled = global.config.logSettings.enableCanonicalLog;
+const isCanonicalLogEnabled = process.env.LOG_SETTINGS__ENABLE_CANONICAL_LOGS;
 
 const dataKeys = {
     APP_LOG: "appLog",

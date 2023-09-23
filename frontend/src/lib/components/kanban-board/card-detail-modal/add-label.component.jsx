@@ -77,6 +77,7 @@ export const AddLabel = ({ cardDetail }) => {
             <div className="label-input-grid">
                 {colors.map((color) => (
                     <div
+                        key={color}
                         onClick={() => setSelectedColor(color)}
                         style={{
                             backgroundColor: color,

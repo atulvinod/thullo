@@ -59,7 +59,11 @@ export const CommentsSection = ({ cardData }) => {
             </div>
             <div>
                 {cardData.card_comments.map((comment) => (
-                    <Comment comment={comment} card_id={cardData.card_id} />
+                    <Comment
+                        comment={comment}
+                        card_id={cardData.card_id}
+                        key={comment.id}
+                    />
                 ))}
             </div>
         </div>

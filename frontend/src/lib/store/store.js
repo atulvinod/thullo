@@ -5,7 +5,11 @@ import { applyMiddleware, compose } from 'redux';
 import { legacy_createStore as createStore } from 'redux'
 
 
-const middlewares = [logger, thunk];
+const middlewares = [];
+if (!process.env.ENV || process.env.ENV.toLowerCase() == 'dev') {
+    middlewares.push(logger);
+}
+middlewares.push(thunk)
 const composedMiddlewares = compose(applyMiddleware(...middlewares));
 
 export const store = createStore(rootReducer, undefined, composedMiddlewares);

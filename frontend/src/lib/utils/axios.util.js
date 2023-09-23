@@ -8,7 +8,7 @@ function select(state) {
 }
 
 const client = axios.create({
-    baseURL: config.environments.local.base_url,
+    baseURL: process.env.FE_BASE_URL ?? config.environments.local.base_url,
 })
 
 client.interceptors.request.use(function (config) {

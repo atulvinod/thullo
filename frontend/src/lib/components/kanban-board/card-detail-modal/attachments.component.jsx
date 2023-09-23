@@ -31,7 +31,7 @@ export const Attachments = ({ cardData, ...props }) => {
         >
             <Formik
                 initialValues={{
-                    attachment_file: null,
+                    attachment_file: "",
                 }}
             >
                 {({ values, handleChange, handleSubmit }) => (

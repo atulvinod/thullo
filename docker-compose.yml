@@ -1,0 +1,23 @@
+version: '3.1'
+services:
+  db:
+    build:
+      dockerfile: './mysql.Dockerfile'
+    volumes:
+      - mysql:/var/mysql
+    ports:
+      - 3308:3306
+  cache:
+    image: redis:6.2-alpine
+    restart: always
+    command: redis-server --save 20 1
+    volumes:
+      - cache:/data
+  backend:
+    build:
+      dockerfile: './backend.Dockerfile'
+
+volumes:
+  mysql:
+  cache:
+    driver: local

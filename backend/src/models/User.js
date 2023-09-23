@@ -42,7 +42,7 @@ class User {
         if (existing_user) {
             throw new RequestError('User already exists with this email', 400);
         }
-        const password_hash = await bcrypt.hash(password, process.AUTH_SALT_ROUNDS);
+        const password_hash = await bcrypt.hash(password, process.env.AUTH_SALT_ROUNDS);
         const [id] = await database.master(this.logger)
             .table(table_name)
             .insert({

@@ -102,8 +102,8 @@ export const CardDetailModal = ({
                                     <LabelVector className="info-label-icon icon-color-grey" />
                                 }
                             />
-                            {cardDetail.card_members.map((member) => (
-                                <div className="mt-16" key={member.member_id}>
+                            {cardDetail.card_members.map((member, index) => (
+                                <div className="mt-16" key={index}>
                                     <ProfileImage
                                         key={member.member_id}
                                         showUserName={true}

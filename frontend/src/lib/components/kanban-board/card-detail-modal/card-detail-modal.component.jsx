@@ -103,8 +103,9 @@ export const CardDetailModal = ({
                                 }
                             />
                             {cardDetail.card_members.map((member) => (
-                                <div className="mt-16">
+                                <div className="mt-16" key={member.member_id}>
                                     <ProfileImage
+                                        key={member.member_id}
                                         showUserName={true}
                                         image_url={member.image_url}
                                         name={member.name}

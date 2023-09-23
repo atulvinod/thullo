@@ -68,6 +68,7 @@ export const UserFinder = ({ onChange, onSearch }) => {
                             className={`d-flex d-align-items-center users-found ${
                                 selectedUsers[user.id] ? "user-selected" : ""
                             }`}
+                            key={user.id}
                         >
                             <ProfileImage
                                 image_url={user.image_url}

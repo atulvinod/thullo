@@ -57,7 +57,9 @@ export const KanbanBoard = () => {
     };
 
     const getAdminUser = (members, created_by_user_id) => {
-        console.log(members);
+        if (!members) {
+            return null;
+        }
         const [user] = members.filter(
             (m) => m.board_member_id == created_by_user_id
         );
@@ -85,7 +87,10 @@ export const KanbanBoard = () => {
                             </span>
 
                             {currentBoard?.board_members?.map((members) => (
-                                <div className="mr-15">
+                                <div
+                                    className="mr-15"
+                                    key={members.board_member_id}
+                                >
                                     <ProfileImage
                                         key={members.board_member_id}
                                         image_url={
@@ -169,7 +174,7 @@ export const KanbanBoard = () => {
                                 "Added list"
                             )
                         }
-                        maxColumnOrderIndex={currentBoard.columns.reduce(
+                        maxColumnOrderIndex={currentBoard?.columns?.reduce(
                             (agg, columns) => {
                                 agg = Math.max(agg, columns.column_order_index);
                                 return agg;
@@ -182,8 +187,8 @@ export const KanbanBoard = () => {
                         setModalIsOpen={setShowMenuModal}
                         currentBoard={currentBoard}
                         adminUser={getAdminUser(
-                            currentBoard.board_members,
-                            currentBoard.created_by_user_id
+                            currentBoard?.board_members,
+                            currentBoard?.created_by_user_id
                         )}
                     ></MenuModal>
                 </div>

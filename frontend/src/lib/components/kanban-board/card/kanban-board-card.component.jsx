@@ -65,8 +65,12 @@ export const KanbanBoardCard = ({ cardData, columnData, ...props }) => {
                         <div className="d-flex">
                             {_.take(cardData.card_members ?? [], 2).map(
                                 (member) => (
-                                    <div className="mr-8">
+                                    <div
+                                        className="mr-8"
+                                        key={member.member_id}
+                                    >
                                         <ProfileImage
+                                            key={member.member_id}
                                             image_url={member.image_url}
                                             name={member.name}
                                         />

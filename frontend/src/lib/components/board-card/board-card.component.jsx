@@ -2,7 +2,7 @@ import "./board-card.style.css";
 import { useNavigate } from "react-router-dom";
 import { ProfileImage } from "../profile-image/profile-image.component";
 import { useDispatch } from "react-redux";
-import { BOARD_ACTION_TYPES } from "../../store/board";
+import { BOARD_ACTION_TYPES, fetchCurrentBoard } from "../../store/board";
 import { createAction } from "../../utils/reducer.utils";
 import { take } from "lodash";
 
@@ -11,6 +11,7 @@ export const BoardCard = ({ boardData }) => {
     const dispatch = useDispatch();
 
     const goToBoard = () => {
+        dispatch(fetchCurrentBoard(boardData.board_id));
         navigate(`boards/${boardData.board_id}`);
     };
     return (
@@ -29,8 +30,9 @@ export const BoardCard = ({ boardData }) => {
             </span>
             <div className="d-flex d-align-items-center">
                 {take(boardData.members, 3).map((member) => (
-                    <div className="mr-11">
+                    <div className="mr-11" key={member.board_member_user_id}>
                         <ProfileImage
+                            key={member.board_member_user_id}
                             image_url={member.board_member_image_url}
                             name={member.board_member_name}
                         />

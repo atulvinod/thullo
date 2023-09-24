@@ -94,19 +94,21 @@ export const MenuModal = ({
                                                 : ButtonTypes.DANGER_OUTLINE
                                         }
                                         onClick={async () => {
-                                            if (
-                                                adminUser.board_member_id ==
-                                                member.board_member_id
-                                            ) {
-                                                return;
-                                            }
-                                            await xhr(() =>
-                                                deleteBoardMember(
-                                                    currentBoard.board_id,
+                                            try {
+                                                if (
+                                                    adminUser.board_member_id ==
                                                     member.board_member_id
-                                                )
-                                            );
-                                            refreshBoard();
+                                                ) {
+                                                    return;
+                                                }
+                                                await xhr(() =>
+                                                    deleteBoardMember(
+                                                        currentBoard.board_id,
+                                                        member.board_member_id
+                                                    )
+                                                );
+                                                refreshBoard();
+                                            } catch (error) {}
                                         }}
                                     />
                                 </div>

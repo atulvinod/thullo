@@ -22,17 +22,18 @@ export const CommentsSection = ({ cardData }) => {
                     initialValues={{
                         comment: "",
                     }}
-                    onSubmit={(values) => {
-                        const { comment } = values;
-                        xhr(() =>
-                            addCommentToCard(
-                                currentBoard.board_id,
-                                cardData.card_id,
-                                comment
-                            )
-                        ).then(() => {
+                    onSubmit={async (values) => {
+                        try {
+                            const { comment } = values;
+                            xhr(() =>
+                                addCommentToCard(
+                                    currentBoard.board_id,
+                                    cardData.card_id,
+                                    comment
+                                )
+                            );
                             refreshBoard();
-                        });
+                        } catch (error) {}
                     }}
                 >
                     {({ values, handleChange, handleSubmit, errors }) => (

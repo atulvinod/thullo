@@ -28,13 +28,14 @@ export const NavBar = () => {
     const xhr = useXHR(false);
 
     const search = debounce(async (query) => {
-        if (!query || !query.length) {
-            return;
-        }
-        xhr(() => searchBoards(query)).then((result) => {
+        try {
+            if (!query || !query.length) {
+                return;
+            }
+            const result = await xhr(() => searchBoards(query));
             setIsComponentVisible(true);
             setSearchResults(result.boards);
-        });
+        } catch (error) {}
     }, 1000);
 
     return (

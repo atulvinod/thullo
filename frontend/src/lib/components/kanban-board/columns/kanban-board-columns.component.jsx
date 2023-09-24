@@ -55,9 +55,11 @@ export const KanbanBoardColumns = ({
                         cardData.fromColumn,
                         columnId
                     )
-                ).then(() => {
-                    refreshBoard();
-                });
+                )
+                    .then(() => {
+                        refreshBoard();
+                    })
+                    .catch((err) => {});
             }
         },
         collect: (monitor) => ({
@@ -107,12 +109,15 @@ export const KanbanBoardColumns = ({
                             </li>
                             <li
                                 onClick={async () => {
-                                    xhr(() =>
-                                        deleteColumn(
-                                            boardId,
-                                            columnData.column_id
-                                        )
-                                    ).then(() => refreshBoard());
+                                    try {
+                                        await xhr(() =>
+                                            deleteColumn(
+                                                boardId,
+                                                columnData.column_id
+                                            )
+                                        );
+                                        refreshBoard();
+                                    } catch (error) {}
                                 }}
                             >
                                 Delete this list
@@ -155,11 +160,17 @@ export const KanbanBoardColumns = ({
                                 board_id,
                                 column_id,
                             }) => {
-                                await xhr(() =>
-                                    createCard(board_id, column_id, card_name)
-                                );
-                                handleDeleteCard(index);
-                                refreshBoard();
+                                try {
+                                    await xhr(() =>
+                                        createCard(
+                                            board_id,
+                                            column_id,
+                                            card_name
+                                        )
+                                    );
+                                    handleDeleteCard(index);
+                                    refreshBoard();
+                                } catch (error) {}
                             }}
                         ></CreateCard>,
                     ]);

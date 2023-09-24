@@ -32,13 +32,15 @@ export const Description = ({ description, ...props }) => {
                         description: currentBoard.description,
                     }}
                     onSubmit={async (values, { isSubmitting }) => {
-                        await xhr(() =>
-                            updateBoardDescription(
-                                currentBoard.board_id,
-                                values.description
-                            )
-                        );
-                        refreshBoard();
+                       try {
+                           await xhr(() =>
+                               updateBoardDescription(
+                                   currentBoard.board_id,
+                                   values.description
+                               )
+                           );
+                           refreshBoard();
+                       } catch (error) {}
                     }}
                 >
                     {({

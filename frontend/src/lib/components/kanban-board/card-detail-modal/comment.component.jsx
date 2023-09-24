@@ -18,11 +18,13 @@ export const Comment = ({ card_id, comment, ...props }) => {
     const xhr = useXHR();
 
     const handleDelete = async () => {
-        await xhr(
-            () => deleteComment(currentBoard.board_id, card_id, comment.id),
-            "Comment deleted"
-        );
-        refreshBoard();
+        try {
+            await xhr(
+                () => deleteComment(currentBoard.board_id, card_id, comment.id),
+                "Comment deleted"
+            );
+            refreshBoard();
+        } catch (error) {}
     };
 
     return (
@@ -67,16 +69,18 @@ export const Comment = ({ card_id, comment, ...props }) => {
                             comment: comment.comment,
                         }}
                         onSubmit={async (values) => {
-                            await xhr(() =>
-                                updateComment(
-                                    currentBoard.board_id,
-                                    card_id,
-                                    comment.id,
-                                    values.comment
-                                )
-                            );
-                            setIsEditMode(false);
-                            refreshBoard();
+                            try {
+                                await xhr(() =>
+                                    updateComment(
+                                        currentBoard.board_id,
+                                        card_id,
+                                        comment.id,
+                                        values.comment
+                                    )
+                                );
+                                setIsEditMode(false);
+                                refreshBoard();
+                            } catch (error) {}
                         }}
                     >
                         {({ values, handleChange, handleSubmit }) => (

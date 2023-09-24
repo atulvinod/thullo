@@ -36,17 +36,19 @@ export const AddLabel = ({ cardDetail }) => {
     const [labelText, setLabelText] = useState(null);
 
     const postLabel = async () => {
-        if (labelText && selectedColor) {
-            await xhr(() =>
-                addLabelToCard(
-                    currentBoard.board_id,
-                    cardDetail.card_id,
-                    selectedColor,
-                    labelText
-                )
-            );
-            refreshBoard();
-        }
+      try {
+          if (labelText && selectedColor) {
+              await xhr(() =>
+                  addLabelToCard(
+                      currentBoard.board_id,
+                      cardDetail.card_id,
+                      selectedColor,
+                      labelText
+                  )
+              );
+              refreshBoard();
+          }
+      } catch (error) {}
     };
 
     return (

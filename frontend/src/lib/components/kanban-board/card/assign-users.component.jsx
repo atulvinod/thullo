@@ -18,15 +18,18 @@ export const AssignUsersToCard = ({ cardData, trigger }) => {
     const xhr = useXHR();
 
     const handleCardMemberAssignment = async () => {
-        await xhr(() =>
-            addMembersToCard(
-                currentBoard.board_id,
-                cardData.card_id,
-                cardMemberIds
-            )
-        );
-        cardMemberIds = [];
-        refreshBoard();
+        try {
+            await xhr(() =>
+                addMembersToCard(
+                    currentBoard.board_id,
+                    cardData.card_id,
+                    cardMemberIds
+                )
+            );
+            cardMemberIds = [];
+            refreshBoard();
+        } catch (error) {}
+      
     };
 
     return (

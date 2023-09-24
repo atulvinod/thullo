@@ -49,11 +49,14 @@ export const KanbanBoard = () => {
     const xhr = useXHR();
 
     const handleUserInvitation = async () => {
-        if (usersToInvite && usersToInvite.length) {
-            await xhr(() => addMembersToBoard(board_id, usersToInvite));
-            dispatch(fetchCurrentBoard(board_id));
-            setUsersToInvite(null);
-        }
+        try {
+            if (usersToInvite && usersToInvite.length) {
+                await xhr(() => addMembersToBoard(board_id, usersToInvite));
+                dispatch(fetchCurrentBoard(board_id));
+                setUsersToInvite(null);
+            }
+        } catch (error) {}
+     
     };
 
     const getAdminUser = (members, created_by_user_id) => {

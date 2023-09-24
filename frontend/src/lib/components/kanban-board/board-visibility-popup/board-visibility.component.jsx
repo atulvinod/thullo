@@ -38,13 +38,19 @@ export const BoardVisibilityPopup = ({ ...props }) => {
                     subHeading={"Anyone on the internet can see this list"}
                     isSelected={!currentBoard.is_board_private}
                     onClick={async () => {
-                        if (!currentBoard.is_board_private) {
-                            return;
-                        }
-                        await xhr(() =>
-                            updateBoardVisibility(currentBoard.board_id, false)
-                        );
-                        refreshBoard();
+                        try {
+                            if (!currentBoard.is_board_private) {
+                                return;
+                            }
+                            await xhr(() =>
+                                updateBoardVisibility(
+                                    currentBoard.board_id,
+                                    false
+                                )
+                            );
+                            refreshBoard();
+                        } catch (error) {}
+                        
                     }}
                 />
                 <BoardVisibilityActionComponent
@@ -52,13 +58,18 @@ export const BoardVisibilityPopup = ({ ...props }) => {
                     subHeading={"Only board members can see this this"}
                     isSelected={currentBoard.is_board_private}
                     onClick={async () => {
-                        if (currentBoard.is_board_private) {
-                            return;
+                        try{
+                            if (currentBoard.is_board_private) {
+                                return;
+                            }
+                            await xhr(() =>
+                                updateBoardVisibility(currentBoard.board_id, true)
+                            );
+                            refreshBoard();
+                        }catch(error){
+                            
                         }
-                        await xhr(() =>
-                            updateBoardVisibility(currentBoard.board_id, true)
-                        );
-                        refreshBoard();
+                       
                     }}
                 />
             </div>

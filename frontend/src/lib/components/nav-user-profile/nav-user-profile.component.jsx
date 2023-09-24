@@ -49,8 +49,8 @@ export const NavUserProfile = () => {
                                 : "user-profile-actions-container dropdown-closed"
                         }
                     >
-                        <div className="user-profile-actions">
-                            <span onClick={logout}>Logout</span>
+                        <div className="user-profile-actions" onClick={logout}>
+                            <span>Logout</span>
                         </div>
                     </div>
                 </div>

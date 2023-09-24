@@ -2,7 +2,7 @@ import "./create-board.style.css";
 import { FormInput } from "../../form-input/form-input.component";
 import { Button, ButtonTypes } from "../../button/button.component";
 import { useRef, useState } from "react";
-import { createBoardAction } from "../../../store/board";
+import { createBoardAction, fetchBoards } from "../../../store/board";
 import { useDispatch } from "react-redux";
 import { Formik } from "formik";
 import { createBoard } from "../../../services/board.services";
@@ -13,6 +13,7 @@ export const CreateBoard = ({ setModalIsOpen }) => {
     const isPrivateCheckboxRef = useRef(null);
 
     const [previewImage, setPreviewImage] = useState(null);
+    const dispatch = useDispatch();
     const xhr = useXHR();
 
     const buttonStyle = {
@@ -36,11 +37,11 @@ export const CreateBoard = ({ setModalIsOpen }) => {
                     return errors;
                 }}
                 onSubmit={async (values, { isSubmitting }) => {
-                    xhr(() => createBoard(values))
-                        .then(() => {
-                            setModalIsOpen(false);
-                        })
-                        .catch((err) => {});
+                    try {
+                        await xhr(() => createBoard(values));
+                        dispatch(fetchBoards());
+                        setModalIsOpen(false);
+                    } catch (error) {}
                 }}
             >
                 {({

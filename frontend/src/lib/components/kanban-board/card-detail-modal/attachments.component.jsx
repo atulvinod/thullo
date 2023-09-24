@@ -43,16 +43,18 @@ export const Attachments = ({ cardData, ...props }) => {
                             name="attachment_file"
                             value={values.attachment_file}
                             onChange={(event) => {
-                                const [file] = event.target.files;
-                                xhr(() =>
-                                    addAttachmentToCard(
-                                        currentBoard.board_id,
-                                        cardData.card_id,
-                                        file
-                                    )
-                                ).then((result) => {
-                                    refreshBoard();
-                                });
+                                try {
+                                    const [file] = event.target.files;
+                                    xhr(() =>
+                                        addAttachmentToCard(
+                                            currentBoard.board_id,
+                                            cardData.card_id,
+                                            file
+                                        )
+                                    ).then((result) => {
+                                        refreshBoard();
+                                    });
+                                } catch (error) {}
                             }}
                         />
                     </form>
@@ -104,16 +106,17 @@ export const Attachments = ({ cardData, ...props }) => {
                                     buttonClasses="ml-8"
                                     buttonType={ButtonTypes.NOBG_OUTLINE}
                                     label={"Delete"}
-                                    onClick={() => {
-                                        xhr(() =>
-                                            deleteCardAttachment(
-                                                currentBoard.board_id,
-                                                cardData.card_id,
-                                                attachment.id
-                                            )
-                                        ).then(() => {
+                                    onClick={async () => {
+                                        try {
+                                            await xhr(() =>
+                                                deleteCardAttachment(
+                                                    currentBoard.board_id,
+                                                    cardData.card_id,
+                                                    attachment.id
+                                                )
+                                            );
                                             refreshBoard();
-                                        });
+                                        } catch (error) {}
                                     }}
                                 />
                             </div>

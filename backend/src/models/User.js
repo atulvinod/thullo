@@ -3,7 +3,6 @@ const bcrypt = require('bcrypt');
 const auth = require('@lib/auth');
 const http_status_codes = require('http-status-codes');
 const database = require('../../lib/database');
-const config = require('../../config/config');
 const { uploadFile } = require('@lib/file_storage');
 const { VALID_FOLDERS } = require('@lib/constants');
 const { getUuid } = require('@util/commonUtility');
@@ -42,7 +41,7 @@ class User {
         if (existing_user) {
             throw new RequestError('User already exists with this email', 400);
         }
-        const password_hash = await bcrypt.hash(password, process.env.AUTH_SALT_ROUNDS);
+        const password_hash = await bcrypt.hash(password, Number(process.env.AUTH_SALT_ROUNDS));
         const [id] = await database.master(this.logger)
             .table(table_name)
             .insert({

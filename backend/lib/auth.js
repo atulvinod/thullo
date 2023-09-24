@@ -13,7 +13,7 @@ function generateJWT(user_id, email) {
 }
 
 function generatePasswordHash(password) {
-    const hash = bcrypt.hash(password, process.env.AUTH_SALT_ROUNDS);
+    const hash = bcrypt.hash(password, Number(process.env.AUTH_SALT_ROUNDS));
     return hash;
 }
 

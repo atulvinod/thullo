@@ -41,10 +41,11 @@ class Board {
 
         const base_query = database.slave(this.logger)
             .table(`${BOARDS_TABLE} as bt`)
-            .innerJoin(`${USERS_TABLE} as u`, 'u.id', 'bt.created_by_user_id')
+            .leftJoin(`${USERS_TABLE} as u`, 'u.id', 'bt.created_by_user_id')
             .leftJoin(`${BOARD_MEMBERS_TABLE} as bm`, 'bm.board_id', 'bt.id')
             .leftJoin(`${USERS_TABLE} as bmu`, 'bm.user_id', 'bmu.id')
-            .select(select_clause);
+            .select(select_clause)
+            .orderBy('bt.id', 'desc');
 
         if (search) {
             base_query.whereRaw(`LOWER(bt.board_title) LIKE %${search.toLowerCase()}%`);
@@ -60,7 +61,7 @@ class Board {
         const participating_private_boards_query = base_query.clone()
             .where('bt.is_private', true)
             .whereNot('bt.created_by_user_id', current_user_id)
-            .where('bmu.id', current_user_id);
+            .whereRaw(`bt.id IN (SELECT board_id from board_members where user_id = ${current_user_id})`);
 
         const [non_private_boards, current_user_private_boards, participating_private_boards] = await Promise.all(
             [
@@ -89,7 +90,7 @@ class Board {
             return agg;
         }, {});
 
-        return Object.values(formatted_result);
+        return _.reverse(Object.values(formatted_result));
     }
 
     /**

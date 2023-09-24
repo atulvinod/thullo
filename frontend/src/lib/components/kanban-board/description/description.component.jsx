@@ -40,6 +40,7 @@ export const Description = ({ description, ...props }) => {
                                )
                            );
                            refreshBoard();
+                           setEditMode(false);
                        } catch (error) {}
                     }}
                 >

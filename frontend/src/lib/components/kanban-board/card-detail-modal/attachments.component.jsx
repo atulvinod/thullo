@@ -42,19 +42,19 @@ export const Attachments = ({ cardData, ...props }) => {
                             type="file"
                             name="attachment_file"
                             value={values.attachment_file}
-                            onChange={(event) => {
-                                try {
-                                    const [file] = event.target.files;
-                                    xhr(() =>
-                                        addAttachmentToCard(
-                                            currentBoard.board_id,
-                                            cardData.card_id,
-                                            file
-                                        )
-                                    ).then((result) => {
+                            onChange={async (event) => {
+                                const [file] = event.target.files;
+                                xhr(() =>
+                                    addAttachmentToCard(
+                                        currentBoard.board_id,
+                                        cardData.card_id,
+                                        file
+                                    )
+                                )
+                                    .then((result) => {
                                         refreshBoard();
-                                    });
-                                } catch (error) {}
+                                    })
+                                    .catch((error) => {});
                             }}
                         />
                     </form>

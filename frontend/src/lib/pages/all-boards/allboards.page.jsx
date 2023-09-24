@@ -43,12 +43,16 @@ const AllBoardsPage = () => {
                     </div>
                 ) : (
                     <div className="all-boards-cards-container">
-                        {allBoards.map((boardData) => (
-                            <BoardCard
-                                key={boardData.board_id}
-                                boardData={boardData}
-                            />
-                        ))}
+                        {allBoards.length ? (
+                            allBoards.map((boardData) => (
+                                <BoardCard
+                                    key={boardData.board_id}
+                                    boardData={boardData}
+                                />
+                            ))
+                        ) : (
+                            <p>No boards available</p>
+                        )}
                     </div>
                 )}
             </div>

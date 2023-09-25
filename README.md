@@ -8,3 +8,7 @@ Before running the application, add all the missing environment variables used i
 For preview, visit
 [Demo app](https://thullo-4epa.onrender.com/)
 
+Sample images
+![Dashboard](sample-images/1.png)
+
+![Details](sample-images/2.png)

@@ -569,14 +569,9 @@ class Board {
         }
 
         const get_users_for_card_query = database.slave(this.logger)
-            .table(`${BOARD_MEMBERS_TABLE} as bm`)
-            .leftJoin(`${CARD} as c`, 'c.board_id', 'bm.board_id')
-            .leftJoin(`${CARD_MEMBERS} as cm`, 'c.id', 'cm.card_id')
-            .leftJoin(`${USERS_TABLE} as u`, 'u.id', 'bm.user_id')
-            .where('c.id', card_id)
-            .where('bm.board_id', board_id)
-            .whereRaw(`LOWER(u.name) LIKE '%${query.toLowerCase()}%'`)
-            .whereNull('cm.user_id')
+            .table(`${USERS_TABLE} as u`)
+            .whereRaw(`u.id in (SELECT user_id from ${BOARD_MEMBERS_TABLE} where board_id = ${board_id})`)
+            .whereRaw(`u.id not in (SELECT user_id from ${CARD_MEMBERS} where card_id = ${card_id})`)
             .select([
                 'u.id',
                 'u.name',

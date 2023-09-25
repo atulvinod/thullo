@@ -1,5 +1,9 @@
 FROM node:18-alpine
 RUN npm install -g create-react-app
+
+ENV REACT_APP_FE_BASE_URL='/v1'
+ENV REACT_APP_ENV='PROD'
+
 RUN mkdir /app
 RUN mkdir /app/backend
 RUN mkdir /app/frontend
@@ -12,9 +16,9 @@ RUN mkdir logs/thullo/appLogs
 RUN npm install
 WORKDIR /app/frontend
 RUN npm install
+
 RUN npm run build
-RUN cp -r -f /app/frontend/build /app/backend/public
-ENV FE_BASE_URL='/v1'
+RUN cp -r -f /app/frontend/build/ /app/backend/public
 ENV APP_NAME="app"
 ENV PORT=5500
 ENV ENV="PROD"
@@ -58,5 +62,4 @@ ENV FIREBASE_CONFIG__STORAGE_BUCKET='thullo-d8d98.appspot.com'
 ENV FIREBASE_CONFIG__MESSAGE_SENDER_ID='169922888993'
 ENV FIREBASE_CONFIG__API_ID='1:169922888993:web:96608c54da8769eb90ea60'
 EXPOSE 5500
-WORKDIR /app
 CMD [ "node", "/app/backend/bin/server.js" ]

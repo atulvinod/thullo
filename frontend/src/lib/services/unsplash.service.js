@@ -4,7 +4,7 @@ import config from '../../config/config.json';
 const client = axios.create({
     baseURL: 'https://api.unsplash.com',
     headers: {
-        Authorization: `Client-ID ${process.env.UNSPLASH_API_KEY ?? config.unsplash_api_key}`
+        Authorization: `Client-ID ${process.env.REACT_APP_UNSPLASH_API_KEY ?? config.unsplash_api_key}`
     }
 })
 

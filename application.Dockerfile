@@ -1,29 +1,12 @@
 FROM node:18-alpine
 RUN npm install -g create-react-app
 
-ENV REACT_APP_FE_BASE_URL='/v1'
 ENV REACT_APP_ENV='PROD'
 ENV REACT_APP_UNSPLASH_API_KEY=''
-RUN mkdir /app
-RUN mkdir /app/backend
-RUN mkdir /app/frontend
-COPY ./backend /app/backend
-COPY ./frontend /app/frontend
-WORKDIR /app/backend
-RUN mkdir logs
-RUN mkdir logs/thullo
-RUN mkdir logs/thullo/appLogs
-RUN npm install
-WORKDIR /app/frontend
-RUN npm install
+ENV REACT_APP_FE_BASE_URL='/v1'
 
-RUN npm run build
-RUN cp -r -f /app/frontend/build/ /app/backend/public
 ENV APP_NAME="app"
-ENV PORT=5500
 ENV ENV="PROD"
-ENV AUTH_SALT_ROUNDS=5
-ENV CLUSTER_SETTING__INSTANCE_COUNT=5
 ENV LOG_SETTINGS__PATH='/app/backend/logs'
 ENV LOG_SETTINGS__ENABLE_TRACKING_LOGS=true
 ENV LOG_SETTINGS__ENABLE_CANONICAL_LOGS=true
@@ -46,20 +29,21 @@ ENV DB__CONNECTIONS__SLAVE__PORT=3306
 ENV DB__CONNECTIONS__SLAVE__DATABASE=''
 ENV DB__CONNECTIONS__SLAVE__USERNAME=''
 ENV DB__CONNECTIONS__SLAVE__PASSWORD=''
-ENV DB__CONNECTIONS__SLAVE__MAX_CONNECTIONS='10'
-ENV HTTP_CLIENT_SETTINGS__TIMEOUT_MS=30000
-ENV HTTP_CLIENT_SETTINGS__RETRY_COUNT=3
-ENV HTTP_CLIENT_SETTINGS__LOG_REQUEST_HEADERS=false
-ENV ENABLE_PROMETHEUS_CLIENT=true
-ENV JWT_AUTH_OPTIONS__SECRET_OR_KEY='secret'
-ENV JWT_AUTH_OPTIONS__ISSUER='demo.demo.com'
-ENV JWT_AUTH_OPTIONS__AUDIENCE='audience'
-ENV JWT_AUTH_OPTIONS__EXPIRY='1y'
-ENV FIREBASE_CONFIG__API_KEY=''
-ENV FIREBASE_CONFIG__AUTH_DOMAIN=''
-ENV FIREBASE_CONFIG__PROJECT_ID=''
-ENV FIREBASE_CONFIG__STORAGE_BUCKET=''
-ENV FIREBASE_CONFIG__MESSAGE_SENDER_ID=''
-ENV FIREBASE_CONFIG__API_ID=''
+
+RUN mkdir /app
+RUN mkdir /app/backend
+RUN mkdir /app/frontend
+COPY ./backend /app/backend
+COPY ./frontend /app/frontend
+WORKDIR /app/backend
+RUN mkdir logs
+RUN mkdir logs/thullo
+RUN mkdir logs/thullo/appLogs
+RUN npm install
+WORKDIR /app/frontend
+RUN npm install
+
+RUN npm run build
+RUN cp -r -f /app/frontend/build/ /app/backend/public
 EXPOSE 5500
 CMD [ "node", "/app/backend/bin/server.js" ]

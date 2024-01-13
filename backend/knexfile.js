@@ -10,7 +10,7 @@ module.exports = {
             host: process.env.DB__CONNECTIONS__MASTER__HOST,
             port: process.env.DB__CONNECTIONS__MASTER__PORT,
             database: process.env.DB__CONNECTIONS_MASTER_DB_NAME || 'thullo',
-            ssl : false
+            ssl : {rejectUnauthorized: false}
         },
     },
     slave: {
@@ -21,7 +21,7 @@ module.exports = {
             host: process.env.DB__CONNECTIONS__SLAVE__HOST,
             port: process.env.DB__CONNECTIONS__SLAVE__PORT,
             database: process.env.DB__CONNECTIONS__SLAVE__DB_NAME || 'thullo',
-            ssl : false
+            ssl : {rejectUnauthorized: false}
         },
     },
 };

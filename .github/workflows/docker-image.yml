@@ -9,13 +9,14 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: prod
     steps:
     - name: Checkout Branch
       uses: actions/checkout@v3
 
     - name: Debug
       run: |
-        echo "Github.ref -> {{ github.ref }}"
+        echo "Github.ref -> ${{ github.ref }}"
         
     - name: Login to DockerHub
       uses: docker/login-action@v1

@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Production CI/CD
 
 on:
   push:
@@ -43,4 +43,11 @@ jobs:
             db_port= ${{secrets.DB__CONNECTIONS__MASTER__PORT}}
             db_client= 'pg'
             db_database= ${{secrets.DB__CONNECTIONS__MASTER__DATABASE}}
-          
+    - name: Run Database migrations
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+        cache: 'npm'
+    - run: npm install
+      working-directory: './backend'  
+            

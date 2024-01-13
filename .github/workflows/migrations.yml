@@ -21,7 +21,7 @@ jobs:
       working-directory: './backend'
     - name: Set Environment Variables
       run: |
-        echo "DB__CONNECTIONS__MASTER__HOST=${db{secrets.DB__CONNECTIONS__MASTER__HOST}}" >> .env
+        echo "DB__CONNECTIONS__MASTER__HOST=${{secrets.DB__CONNECTIONS__MASTER__HOST}}" >> .env
         echo "DB__CONNECTIONS__MASTER__PORT=${{secrets.DB__CONNECTIONS__MASTER__PORT}}" >> .env
         echo "DB__CONNECTIONS__MASTER__DATABASE=${{secrets.DB__CONNECTIONS__MASTER__DATABASE}}" >> .env
         echo "DB__CONNECTIONS__MASTER__USERNAME=${{secrets.DB__CONNECTIONS__MASTER__USERNAME}}" >> .env

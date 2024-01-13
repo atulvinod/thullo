@@ -1,5 +1,15 @@
 const { Knex } = require('knex');
-const TABLE_NAMES = require('./_table_names');
+const TABLE_NAMES = [
+    'board_columns',
+    'board_members',
+    'boards',
+    'card',
+    'card_attachments',
+    'card_comments',
+    'card_labels',
+    'card_members',
+    'users',
+];
 
 function updateColumnModifiedQuery(tablename, db_client = 'mysql') {
     if (db_client === 'pg') {

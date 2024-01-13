@@ -13,9 +13,9 @@ services:
     command: redis-server --save 20 1
     volumes:
       - cache:/data
-  backend:
+  app:
     build:
-      dockerfile: './backend.Dockerfile'
+      dockerfile: './application.Dockerfile'
 
 volumes:
   mysql:

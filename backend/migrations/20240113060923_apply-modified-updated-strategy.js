@@ -1,5 +1,5 @@
-const { Knex } = require('knex');
-const TABLE_NAMES = require('./_table_names');
+const { Knex } = require("knex");
+const TABLE_NAMES = require("./_table_names");
 
 function updateColumnModifiedQuery(tablename) {
     return `ALTER TABLE ${tablename} MODIFY COLUMN modified DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;`;
@@ -14,11 +14,13 @@ async function executeQueryForPostgres(knex) {
            RETURN NEW;
         END;
         $$ language 'plpgsql';
-
-        CREATE TRIGGER update_ab_changetimestamp BEFORE UPDATE
-        ON ab FOR EACH ROW EXECUTE PROCEDURE 
-        update_changetimestamp_column()
         `);
+
+    for (let i = 0; i < TABLE_NAMES.length; i += 1) {
+        await knex.raw(`CREATE TRIGGER update_${TABLE_NAMES[i]}_changetimestamp BEFORE UPDATE
+            ON ${TABLE_NAMES[i]} FOR EACH ROW EXECUTE PROCEDURE 
+            update_changetimestamp_column()`);
+    }
 }
 
 async function executeQueryForMySQL(knex) {
@@ -32,7 +34,7 @@ async function executeQueryForMySQL(knex) {
  * @param {Knex} knex
  */
 exports.up = async function (knex) {
-    if (process.env.DATABASE_CLIENT === 'pg') {
+    if (process.env.DATABASE_CLIENT === "pg") {
         await executeQueryForPostgres(knex);
     } else {
         await executeQueryForMySQL(knex);

@@ -43,11 +43,11 @@ jobs:
             db_port= ${{secrets.DB__CONNECTIONS__MASTER__PORT}}
             db_client= 'pg'
             db_database= ${{secrets.DB__CONNECTIONS__MASTER__DATABASE}}
-    - name: Run Database migrations
+    - name: Setup node.js
       uses: actions/setup-node@v3
       with:
         node-version: '20'
-        cache: 'npm'
-    - run: npm install
+    - name: Install node dependencies
+      run: npm install
       working-directory: './backend'  
             

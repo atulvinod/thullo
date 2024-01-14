@@ -1,9 +1,9 @@
 name: Production CI/CD
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
+  create:
+    tags:
+      - '*'
     branches: [ "main" ]
 
 jobs:

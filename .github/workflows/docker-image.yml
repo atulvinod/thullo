@@ -34,8 +34,8 @@ jobs:
           tags: 'atulvinod1911/thullo:latest'
           build-args: |
             unsplash_api_key= ${{secrets.REACT_APP_UNSPLASH_API_KEY}}
-            redis_host= ${{secrets.REDIS_SETTINGS_HOST}}
-            redis_port= ${{secrets.REDIS_SETTINGS_PORT}}
+            redis_host= ${{secrets.REDIS_SETTINGS__HOST}}
+            redis_port= ${{secrets.REDIS_SETTINGS__PORT}}
             redis_password= ${{secrets.REDIS_SETTINGS__PASSWORD}}
             db_host= ${{secrets.DB__CONNECTIONS__MASTER__HOST}}
             db_user= ${{secrets.DB__CONNECTIONS__MASTER__USERNAME}}

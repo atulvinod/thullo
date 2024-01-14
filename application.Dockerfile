@@ -25,7 +25,7 @@ ARG firebase_message_sender_id='169922888993'
 ARG firebase_config_api_id='1:169922888993:web:96608c54da8769eb90ea60'
 
 # Necessary environment variables
-ENV LOG_SETTINGS__PATH = '/app/backend/logs/thullo'
+ENV LOG_SETTINGS__PATH = './logs'
 ENV DATABASE_CLIENT=${db_client}
 ENV REACT_APP_UNSPLASH_API_KEY=${unsplash_api_key}
 ENV REDIS_SETTINGS__HOST=${redis_host}

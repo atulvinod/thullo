@@ -26,8 +26,8 @@ jobs:
         echo "DB__CONNECTIONS__MASTER__DATABASE=${{secrets.DB__CONNECTIONS__MASTER__DATABASE}}" >> .env
         echo "DB__CONNECTIONS__MASTER__USERNAME=${{secrets.DB__CONNECTIONS__MASTER__USERNAME}}" >> .env
         echo "DB__CONNECTIONS__MASTER__PASSWORD=${{secrets.DB__CONNECTIONS__MASTER__PASSWORD}}" >> .env
-        echo "DB__CONNECTIONS__SLAVE__HOST=${{secrets.DB__CONNECTIONS__SLAVE__HOSTdb_host}}" >> .env
-        echo "DB__CONNECTIONS__SLAVE__PORT=${{secrets.DB__CONNECTIONS__SLAVE__PORTdb_port}}" >> .env
+        echo "DB__CONNECTIONS__SLAVE__HOST=${{secrets.DB__CONNECTIONS__SLAVE__HOST}}" >> .env
+        echo "DB__CONNECTIONS__SLAVE__PORT=${{secrets.DB__CONNECTIONS__SLAVE__PORT}}" >> .env
         echo "DB__CONNECTIONS__SLAVE__DATABASE=${{secrets.DB__CONNECTIONS__SLAVE__DATABASE}}" >> .env
         echo "DB__CONNECTIONS__SLAVE__USERNAME=${{secrets.DB__CONNECTIONS__SLAVE__USERNAME}}" >> .env
         echo "DB__CONNECTIONS__SLAVE__PASSWORD=${{secrets.DB__CONNECTIONS__SLAVE__PASSWORD}}" >> .env

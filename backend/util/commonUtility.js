@@ -131,12 +131,17 @@ module.exports = {
             'FIREBASE_CONFIG__MESSAGE_SENDER_ID',
             'FIREBASE_CONFIG__API_ID',
         ];
+        const non_set_variables = [];
         for (const env of require_env_variables) {
             if (!process.env[env]) {
-                throw new Error(`${env} variable is mandatory and is not set`);
+                non_set_variables.push(env);
             } else {
                 console.log(`ENV SET: ${env} -> ${process.env[env]}`);
             }
+        }
+        if (non_set_variables.length) {
+            console.log(non_set_variables);
+            throw new Error('Some environment variables are not set');
         }
     },
 };

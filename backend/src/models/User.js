@@ -2,20 +2,21 @@ const RequestError = require('@errors/RequestError');
 const bcrypt = require('bcrypt');
 const auth = require('@lib/auth');
 const http_status_codes = require('http-status-codes');
-const database = require('../../lib/database');
 const { uploadFile } = require('@lib/file_storage');
 const { VALID_FOLDERS } = require('@lib/constants');
 const { getUuid } = require('@util/commonUtility');
+const Base = require('./Base');
 
 const table_name = 'users';
 
-class User {
+class User extends Base {
     constructor(logger) {
+        super(logger);
         this.logger = logger;
     }
 
     #find(email) {
-        return database.slave(this.logger)
+        return this.getSlaveDatabase()
             .table(table_name)
             .where('email', email)
             .select(['id', 'name', 'image_url', 'password', 'email']);
@@ -30,7 +31,7 @@ class User {
     }
 
     async findManyByName(name) {
-        return database.slave(this.logger)
+        return this.getSlaveDatabase()
             .table(table_name)
             .whereRaw(`LOWER(name) LIKE '%${name.toLowerCase()}%'`)
             .select(['id', 'name', 'image_url', 'email']);
@@ -42,11 +43,9 @@ class User {
             throw new RequestError('User already exists with this email', 400);
         }
         const password_hash = await bcrypt.hash(password, Number(process.env.AUTH_SALT_ROUNDS));
-        const [id] = await database.master(this.logger)
-            .table(table_name)
-            .insert({
-                name, email, password: password_hash, image_url,
-            });
+        const id = await this.insertToDb(table_name, {
+            name, email, password: password_hash, image_url,
+        });
         return id;
     }
 

@@ -1,10 +1,10 @@
 const RequestError = require('@errors/RequestError');
-const database = require('@lib/database');
 const http_status = require('http-status-codes');
 const file_storage = require('@lib/file_storage');
 const constants = require('@lib/constants');
 const commonUtility = require('@util/commonUtility');
 const _ = require('lodash');
+const Base = require('./Base');
 
 const BOARDS_TABLE = 'boards';
 const USERS_TABLE = 'users';
@@ -16,8 +16,9 @@ const CARD_ATTACHMENTS = 'card_attachments';
 const CARD_COMMENTS = 'card_comments';
 const CARD = 'card';
 
-class Board {
+class Board extends Base {
     constructor(logger) {
+        super(logger);
         this.logger = logger;
     }
 
@@ -39,7 +40,7 @@ class Board {
             'bmu.name as board_member_name',
         ];
 
-        const base_query = database.slave(this.logger)
+        const base_query = this.getSlaveDatabase()
             .table(`${BOARDS_TABLE} as bt`)
             .leftJoin(`${USERS_TABLE} as u`, 'u.id', 'bt.created_by_user_id')
             .leftJoin(`${BOARD_MEMBERS_TABLE} as bm`, 'bm.board_id', 'bt.id')
@@ -67,7 +68,7 @@ class Board {
             [
                 non_private_boards_query,
                 current_user_private_boards_query,
-                participating_private_boards_query
+                participating_private_boards_query,
             ],
         );
 
@@ -110,14 +111,13 @@ class Board {
             cover_url = download_url;
         }
 
-        const [id] = await database.master(this.logger)
-            .table(BOARDS_TABLE)
-            .insert({
-                created_by_user_id,
-                board_title,
-                cover_url,
-                is_private: JSON.parse(is_private),
-            });
+        const id = await this.insertToDb(BOARDS_TABLE, {
+            created_by_user_id,
+            board_title,
+            cover_url,
+            is_private: JSON.parse(is_private),
+        });
+
         await this.addMembersToBoard(id, [created_by_user_id]);
         return id;
     }
@@ -131,13 +131,12 @@ class Board {
         if (!board_id || !column_title) {
             throw new RequestError('Missing required fields', http_status.StatusCodes.BAD_REQUEST);
         }
-        const [id] = await database.master(this.logger)
-            .table(COLUMNS_TABLE)
-            .insert({
-                board_id,
-                column_title,
-                column_order_index,
-            });
+        const id = await this.insertToDb(COLUMNS_TABLE, {
+            board_id,
+            column_title,
+            column_order_index,
+        });
+
         return id;
     }
 
@@ -151,11 +150,13 @@ class Board {
             throw new RequestError('Missing required fields', http_status.StatusCodes.BAD_REQUEST);
         }
         for (const user_id of member_user_ids) {
-            await database.master(this.logger).table(BOARD_MEMBERS_TABLE)
-                .insert({
+            await this.insertToDb(
+                BOARD_MEMBERS_TABLE,
+                {
                     board_id,
                     user_id,
-                });
+                },
+            );
         }
     }
 
@@ -169,19 +170,17 @@ class Board {
         if (!card_id || !label_color || !label_name) {
             throw new RequestError('Missing required fields', http_status.StatusCodes.BAD_REQUEST);
         }
-        const [id] = await database.master(this.logger)
-            .table(CARD_LABELS)
-            .insert({
-                card_id,
-                label_color,
-                label_name,
-            });
+        const id = await this.insertToDb(CARD_LABELS, {
+            card_id,
+            label_color,
+            label_name,
+        });
         return id;
     }
 
     async #getCardsForColumn(column_id) {
         const cards = [];
-        const card_query = database.slave(this.logger)
+        const card_query = this.getSlaveDatabase()
             .table(CARD)
             .select([
                 'id as card_id',
@@ -202,7 +201,7 @@ class Board {
                 card_attachments: [],
                 card_comments: [],
             };
-            const label_query = database.slave(this.logger)
+            const label_query = this.getSlaveDatabase()
                 .table(CARD_LABELS)
                 .where('card_id', card.card_id)
                 .select([
@@ -211,7 +210,7 @@ class Board {
                     'label_name',
                 ]);
             const label_data = await label_query;
-            const card_member_query = database.slave(this.logger)
+            const card_member_query = this.getSlaveDatabase()
                 .table(`${CARD_MEMBERS} as cm`)
                 .join(`${USERS_TABLE} as u`, 'u.id', 'cm.user_id')
                 .select(
@@ -221,11 +220,11 @@ class Board {
             )
                 .where('cm.card_id', card.card_id);
 
-            const card_attachments_query = database.slave(this.logger)
+            const card_attachments_query = this.getSlaveDatabase()
                 .table(CARD_ATTACHMENTS)
                 .where('card_id', card.card_id);
 
-            const card_comments_query = database.slave(this.logger)
+            const card_comments_query = this.getSlaveDatabase()
                 .table(`${CARD_COMMENTS} as co`)
                 .join(`${USERS_TABLE} as u`, 'u.id', 'co.user_id')
                 .select([
@@ -234,7 +233,7 @@ class Board {
                     'u.image_url',
                     'co.comment',
                     'co.created',
-                    'co.id'
+                    'co.id',
                 ])
                 .where('co.card_id', card.card_id);
 
@@ -268,7 +267,7 @@ class Board {
     }
 
     async getBoardDetails(board_id) {
-        const board_data_query = database.slave(this.logger)
+        const board_data_query = this.getSlaveDatabase()
             .table(BOARDS_TABLE)
             .where('id', board_id)
             .select([
@@ -281,7 +280,7 @@ class Board {
             ])
             .first();
 
-        const board_columns_query = database.slave(this.logger)
+        const board_columns_query = this.getSlaveDatabase()
             .table(COLUMNS_TABLE)
             .select([
                 'id as column_id',
@@ -289,23 +288,22 @@ class Board {
                 'column_order_index',
             ]).where('board_id', board_id);
 
-        const board_members_query = database.slave(this.logger)
+        const board_members_query = this.getSlaveDatabase()
             .table(`${BOARD_MEMBERS_TABLE} as bm`)
             .join(`${USERS_TABLE} as u`, 'u.id', 'bm.user_id')
             .select([
                 'u.id as board_member_id',
                 'u.name as board_member_name',
-                'u.image_url as board_member_image_url'
+                'u.image_url as board_member_image_url',
             ])
             .where('bm.board_id', board_id);
-
 
         const [board_data, board_columns, board_members] = await Promise.all(
             [
                 board_data_query,
                 board_columns_query,
-                board_members_query
-            ]
+                board_members_query,
+            ],
         );
         const result_obj = {
             board_title: board_data.board_title,
@@ -333,9 +331,7 @@ class Board {
             throw new RequestError('Missing required fields', http_status.StatusCodes.BAD_REQUEST);
         }
         for (const member_id of member_ids) {
-            await database.master(this.logger)
-            .table(CARD_MEMBERS)
-            .insert({
+            await this.insertToDb(CARD_MEMBERS, {
                 card_id,
                 user_id: member_id,
             });
@@ -343,7 +339,7 @@ class Board {
     }
 
     /**
-     * 
+     *
      * @param {Number} card_id,
      * @param {Number} added_by_user_id,
      * @param {Number} attachment_file,
@@ -357,15 +353,13 @@ class Board {
             fileUUID,
             attachment_file,
         );
-        const [id] = await database.master(this.logger)
-            .table(CARD_ATTACHMENTS)
-            .insert({
-                attachment_title: attachment_file.originalname,
-                attachment_type: attachment_file.mimetype,
-                attachment_url,
-                card_id,
-                user_id: added_by_user_id,
-            });
+        const id = await this.insertToDb(CARD_ATTACHMENTS, {
+            attachment_title: attachment_file.originalname,
+            attachment_type: attachment_file.mimetype,
+            attachment_url,
+            card_id,
+            user_id: added_by_user_id,
+        });
         return { id, attachment_url };
     }
 
@@ -379,36 +373,35 @@ class Board {
         if (!card_id || !user_id || !comment) {
             throw new RequestError('Missing required fields', http_status.StatusCodes.BAD_REQUEST);
         }
-        const [id] = await database.master(this.logger)
-            .table(CARD_COMMENTS)
-            .insert(
-                {
-                    card_id,
-                    user_id,
-                    comment,
-                },
-            );
+        const id = await this.insertToDb(
+            CARD_COMMENTS,
+            {
+                card_id,
+                user_id,
+                comment,
+            },
+        );
         return id;
     }
 
     async deleteCommentFromCard(comment_id) {
-        await database.master(this.logger)
+        await this.getMasterDatabase()
             .table(CARD_COMMENTS)
             .where({ id: comment_id })
             .del();
     }
 
     async updateCardComment(comment_id, comment) {
-        await database.master(this.logger)
+        await this.getMasterDatabase()
             .table(CARD_COMMENTS)
             .update({ comment })
-            .where({ id: comment_id })
+            .where({ id: comment_id });
     }
 
     async #getMaxColumnOrder(column_id) {
-        const { max_column_order } = await database.slave(this.logger)
+        const { max_column_order } = await this.getSlaveDatabase()
             .table(CARD)
-            .select(database.raw('max(column_order) as max_column_order'))
+            .select(this.getRawDatabase().raw('max(column_order) as max_column_order'))
             .where({ column_id })
             .first();
         return max_column_order;
@@ -420,14 +413,12 @@ class Board {
         }
         const { board_id, column_id, card_name } = card_data;
         const max_column_order = await this.#getMaxColumnOrder(column_id);
-        const [id] = await database.master(this.logger)
-            .table(CARD)
-            .insert({
-                board_id,
-                column_id,
-                card_name,
-                column_order: (max_column_order + 1)
-            })
+        const id = await this.insertToDb(CARD, {
+            board_id,
+            column_id,
+            card_name,
+            column_order: (max_column_order + 1),
+        });
         return id;
     }
 
@@ -435,22 +426,22 @@ class Board {
         if (!column_id) {
             throw new RequestError('Missing required fields', http_status.StatusCodes.BAD_REQUEST);
         }
-        await database.master(this.logger)
+        await this.getMasterDatabase()
             .table(COLUMNS_TABLE)
             .update({
-                column_title
+                column_title,
             }).where('id', column_id);
     }
 
     async #deleteCards(column_id) {
-        await database.master(this.logger)
+        await this.getMasterDatabase()
             .table(CARD)
             .where({ column_id })
             .del();
     }
 
     async #deleteColumn(column_id) {
-        await database.master(this.logger)
+        await this.getMasterDatabase()
             .table(COLUMNS_TABLE)
             .where({ id: column_id })
             .del();
@@ -465,10 +456,10 @@ class Board {
         if (!board_id || !description) {
             throw new RequestError('Missing required fields', http_status.StatusCodes.BAD_REQUEST);
         }
-        await database.master(this.logger)
+        await this.getMasterDatabase()
             .table(BOARDS_TABLE)
             .update({
-                description
+                description,
             }).where({ id: board_id });
     }
 
@@ -477,7 +468,7 @@ class Board {
             throw new RequestError('Missing required fields', http_status.StatusCodes.BAD_REQUEST);
         }
 
-        const delete_board_member_query = await database.master(this.logger)
+        const delete_board_member_query = await this.getMasterDatabase()
             .table(BOARD_MEMBERS_TABLE)
             .del()
             .where({
@@ -485,17 +476,17 @@ class Board {
                 user_id,
             });
 
-        const delete_member_query = database.master(this.logger)
+        const delete_member_query = this.getMasterDatabase()
             .table(CARD_MEMBERS)
             .join(`${CARD} as c`, `${CARD_MEMBERS}.card_id`, 'c.id')
             .join(`${BOARDS_TABLE} as b`, 'b.id', 'c.board_id')
             .where({
                 'b.id': board_id,
-                [`${CARD_MEMBERS}.user_id`]: user_id
+                [`${CARD_MEMBERS}.user_id`]: user_id,
             })
             .del();
 
-        await Promise.all([delete_board_member_query, delete_member_query])
+        await Promise.all([delete_board_member_query, delete_member_query]);
     }
 
     async updateVisibility(board_id, is_private) {
@@ -503,37 +494,37 @@ class Board {
             throw new RequestError('Missing required fields', http_status.StatusCodes.BAD_REQUEST);
         }
 
-        await database.master(this.logger)
+        await this.getMasterDatabase()
             .table(BOARDS_TABLE)
             .update({
-                is_private: JSON.parse(is_private)
+                is_private: JSON.parse(is_private),
             });
     }
 
     async moveCard(board_id, card_id, from_column_id, to_column_id) {
         const max_column_order = await this.#getMaxColumnOrder(to_column_id);
-        const query = database.master(this.logger)
+        const query = this.getMasterDatabase()
             .table(CARD)
             .update({ column_id: to_column_id, column_order: (max_column_order + 1) })
             .where({
                 board_id,
                 column_id: from_column_id,
                 id: card_id,
-            })
+            });
         await query;
     }
 
     async deleteAttachment(attachment_id) {
-        await database.master(this.logger)
+        await this.getMasterDatabase()
             .table(CARD_ATTACHMENTS)
             .del()
             .where({
-                id: attachment_id
+                id: attachment_id,
             });
     }
 
     async setCardCover(card_id, cover_image_url) {
-        await database.master(this.logger)
+        await this.getMasterDatabase()
             .table(CARD)
             .update({ cover_image_url })
             .where('id', card_id);
@@ -543,8 +534,8 @@ class Board {
         if (!query || !query.length) {
             return [];
         }
-        const get_users_for_board_query = database.slave(this.logger)
-            .table(database.raw(` (
+        const get_users_for_board_query = this.getSlaveDatabase()
+            .table(this.getRawDatabase().raw(` (
                 SELECT
                     user_id
                 FROM
@@ -556,7 +547,7 @@ class Board {
                 'users.id',
                 'users.name',
                 'users.email',
-                'users.image_url'
+                'users.image_url',
             ])
             .whereRaw(`LOWER(users.name) LIKE '%${query.toString()}%'`);
 
@@ -565,10 +556,10 @@ class Board {
 
     async searchUserForCardAssignment(board_id, card_id, query) {
         if (!query || !query.length) {
-            return []
+            return [];
         }
 
-        const get_users_for_card_query = database.slave(this.logger)
+        const get_users_for_card_query = this.getSlaveDatabase()
             .table(`${USERS_TABLE} as u`)
             .whereRaw(`u.id in (SELECT user_id from ${BOARD_MEMBERS_TABLE} where board_id = ${board_id})`)
             .whereRaw(`u.id not in (SELECT user_id from ${CARD_MEMBERS} where card_id = ${card_id})`)
@@ -576,7 +567,7 @@ class Board {
                 'u.id',
                 'u.name',
                 'u.email',
-                'u.image_url'
+                'u.image_url',
             ]);
 
         return get_users_for_card_query;

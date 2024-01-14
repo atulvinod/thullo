@@ -41,6 +41,6 @@ jobs:
             db_user=${{secrets.DB__CONNECTIONS__MASTER__USERNAME}}
             db_password=${{secrets.DB__CONNECTIONS__MASTER__PASSWORD}}
             db_port=${{secrets.DB__CONNECTIONS__MASTER__PORT}}
-            db_client='pg'
+            db_client=${{secrets.DATABASE_CLIENT}}
             db_database=${{secrets.DB__CONNECTIONS__MASTER__DATABASE}}
             

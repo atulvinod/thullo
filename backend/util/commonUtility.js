@@ -135,7 +135,7 @@ module.exports = {
         for (const env of require_env_variables) {
             if (!process.env[env]) {
                 non_set_variables.push(env);
-            } else {
+            } else if (process.env.DUMP_ENV_VALUES) {
                 console.log(`ENV SET: ${env} -> ${process.env[env]}`);
             }
         }

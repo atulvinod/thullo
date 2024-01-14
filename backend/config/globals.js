@@ -1,5 +1,6 @@
 require('dotenv').config();
 require('module-alias/register');
+require('../util/commonUtility').validateENV();
 const firebase = require('firebase/app');
 const common = require('../util/commonUtility');
 // Constants

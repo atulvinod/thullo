@@ -2,8 +2,8 @@ const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 
-require('./config/globals');
 require('./util/commonUtility').validateENV();
+require('./config/globals');
 
 const boards = require('@src/routes/boards');
 const userRouter = require('@src/routes/user');

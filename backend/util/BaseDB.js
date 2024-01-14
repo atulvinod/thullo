@@ -65,7 +65,6 @@ class BaseDB {
      * @param {string} client - Knex SQL Adaptor Client
      */
     constructor(dsn, client) {
-        console.log('client value ', client);
         this.#dsn = dsn;
 
         const dsn_details = database_configs[dsn];
@@ -109,12 +108,20 @@ class BaseDB {
         builder.on('query-response', (_response, query) => {
             const time_taken = new Date() - started_at;
             started_at = undefined;
-            const raw_query = this.raw(query.sql, query.bindings).toString();
+            const raw_query = this.#buildSQLQuery(query.sql, query.bindings);
             if (query.method !== 'select' || process.env.DB__SETTINGS__ENABLE_SELECT_QUERY_LOGS) {
                 logger.info(`${raw_query} | tt: ${time_taken}ms`, log_options);
             }
         });
         return builder;
+    }
+
+    #buildSQLQuery(sql, bindings) {
+        const final_sql = process.env.DATABASE_CLIENT === 'pg' ? bindings.reduce((agg, value, index) => {
+            agg = agg.replace(`$${index + 1}`, value);
+            return agg;
+        }, sql) : this.raw(sql, bindings).toString();
+        return final_sql || sql;
     }
 
     /**

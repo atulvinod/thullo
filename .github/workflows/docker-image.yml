@@ -31,7 +31,7 @@ jobs:
       with:
           context: .
           file: 'application.Dockerfile'
-          push: ${{ github.event.base_ref =='refs/heads/main' && github.ref_type == 'tag'}}
+          push: true
           tags: 'atulvinod1911/thullo:latest'
           build-args: |
             unsplash_api_key= ${{secrets.REACT_APP_UNSPLASH_API_KEY}}

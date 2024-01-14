@@ -32,11 +32,12 @@ jobs:
         echo "DB__CONNECTIONS__SLAVE__USERNAME=${{secrets.DB__CONNECTIONS__SLAVE__USERNAME}}" >> .env
         echo "DB__CONNECTIONS__SLAVE__PASSWORD=${{secrets.DB__CONNECTIONS__SLAVE__PASSWORD}}" >> .env
         echo "DATABASE_CLIENT=${{secrets.DATABASE_CLIENT}}" >> .env
+        cat .env
       working-directory: './backend'
     - name: Run Migrations
       run: |
         npm install knex -g
-        knex migrate:latest --client ${{secrets.DATABASE_CLIENT}} --env master
-        knex migrate:latest --client ${{secrets.DATABASE_CLIENT}} --env slave
+        knex migrate:latest --client pg --env master
+        knex migrate:latest --client pg --env slave
       working-directory: './backend'
       

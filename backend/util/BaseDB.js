@@ -65,6 +65,7 @@ class BaseDB {
      * @param {string} client - Knex SQL Adaptor Client
      */
     constructor(dsn, client) {
+        console.log('client value ', client);
         this.#dsn = dsn;
 
         const dsn_details = database_configs[dsn];

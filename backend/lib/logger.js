@@ -130,7 +130,7 @@ function getLoggerConfiguration() {
  * @returns 
  */
  function getAppLogAppender(fileName, layoutType) {
-    const logDirectory = path.join(process.env.LOG_SETTINGS__PATH, "appLogs");
+     const logDirectory = path.join(__dirname, process.env.LOG_SETTINGS__PATH, "appLogs");
     common.makeDirectoryIfNotPresent(logDirectory);
 
     //Size-based rotation
@@ -179,7 +179,7 @@ function getLogAppender(directory, fileName, appenderType, additionalOptions, la
  * @returns
  */
 function getTrackingLogAppender() {
-    const logDirectory = path.join(process.env.LOG_SETTINGS__PATH, "trackLogs");
+    const logDirectory = path.join(__dirname, process.env.LOG_SETTINGS__PATH, "trackLogs");
     const fileName = "tracking";
     const layoutType = "trackLog";
     common.makeDirectoryIfNotPresent(logDirectory);

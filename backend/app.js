@@ -1,7 +1,8 @@
+
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
-
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 require('./config/globals');
 
 const boards = require('@src/routes/boards');

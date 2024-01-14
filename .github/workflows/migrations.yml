@@ -12,7 +12,7 @@ jobs:
     environment: prod
     steps:
     - uses: actions/checkout@v3
-    - name: Setup Node.js ${{ matrix.node-version }}
+    - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
         node-version: '20'
@@ -31,12 +31,12 @@ jobs:
         echo "DB__CONNECTIONS__SLAVE__DATABASE=${{secrets.DB__CONNECTIONS__SLAVE__DATABASE}}" >> .env
         echo "DB__CONNECTIONS__SLAVE__USERNAME=${{secrets.DB__CONNECTIONS__SLAVE__USERNAME}}" >> .env
         echo "DB__CONNECTIONS__SLAVE__PASSWORD=${{secrets.DB__CONNECTIONS__SLAVE__PASSWORD}}" >> .env
-        echo "DATABASE_CLIENT=${{secrets.DATABASE_CLIENT}}=pg" >> .env
+        echo "DATABASE_CLIENT=${{secrets.DATABASE_CLIENT}}" >> .env
       working-directory: './backend'
     - name: Run Migrations
       run: |
         npm install knex -g
-        knex migrate:latest --client pg --env master
-        knex migrate:latest --client pg --env slave
+        knex migrate:latest --client ${{secrets.DATABASE_CLIENT}} --env master
+        knex migrate:latest --client ${{secrets.DATABASE_CLIENT}} --env slave
       working-directory: './backend'
       

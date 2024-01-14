@@ -9,8 +9,7 @@ module.exports = {
             password: process.env.DB__CONNECTIONS__MASTER__PASSWORD,
             host: process.env.DB__CONNECTIONS__MASTER__HOST,
             port: process.env.DB__CONNECTIONS__MASTER__PORT,
-            database: process.env.DB__CONNECTIONS_MASTER_DB_NAME || 'thullo',
-            ssl : false
+            database: process.env.DB__CONNECTIONS__MASTER__DATABASE || 'thullo',
         },
     },
     slave: {
@@ -20,8 +19,7 @@ module.exports = {
             password: process.env.DB__CONNECTIONS__SLAVE__PASSWORD,
             host: process.env.DB__CONNECTIONS__SLAVE__HOST,
             port: process.env.DB__CONNECTIONS__SLAVE__PORT,
-            database: process.env.DB__CONNECTIONS__SLAVE__DB_NAME || 'thullo',
-            ssl : false
+            database: process.env.DB__CONNECTIONS__SLAVE__DATABASE || 'thullo',
         },
     },
 };

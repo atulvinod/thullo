@@ -134,6 +134,8 @@ module.exports = {
         for (const env of require_env_variables) {
             if (!process.env[env]) {
                 throw new Error(`${env} variable is mandatory and is not set`);
+            } else {
+                console.log(`ENV SET: ${env} -> ${process.env[env]}`);
             }
         }
     },

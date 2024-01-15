@@ -1,12 +1,9 @@
 name: Production CI/CD
 
 on:
-  push:
-    tags:
-      - '*'
-    branches:
-      - main
-
+  release: 
+    types: [published, created, edited]
+    
 jobs:
   build:
     runs-on: ubuntu-latest

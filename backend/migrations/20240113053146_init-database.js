@@ -26,7 +26,7 @@ exports.up = function (knex) {
         .createTableIfNotExists('boards', (table) => {
             appendCommonColumns(knex, table);
             table.text('board_title').notNullable();
-            table.tinyint('is_private').defaultTo('0').notNullable();
+            table.boolean('is_private').defaultTo(false).notNullable();
             table.integer('created_by_user_id').notNullable();
             table.text('cover_url');
             table.text('description');

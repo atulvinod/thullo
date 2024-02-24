@@ -38,3 +38,9 @@
 .column-popup-menu li:not(:last-child){
     border-bottom: 0.1rem solid #E0E0E0;
 }
+
+.column-highlight{
+    border: 1px dashed blue;
+    border-radius: 1.2rem;
+    background-color: #82a6ff73;
+}

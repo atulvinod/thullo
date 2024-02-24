@@ -157,7 +157,7 @@ export const KanbanBoard = () => {
                         <li>
                             <KanbanActionButton
                                 onClick={() => setShowCreateColumnModal(true)}
-                                label={"Add another list"}
+                                label={"Add another column"}
                                 icon={<PlusVector className="button-icon" />}
                             />
                         </li>

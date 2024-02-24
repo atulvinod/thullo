@@ -84,6 +84,14 @@ export const KanbanBoardColumns = ({
         setCreateNewCardComponents(createNewCardComponents);
     };
 
+    function isCardHoverOnCurrentColumn() {
+        return (
+            hoverColumn == columnId &&
+            hoverCardData &&
+            hoverCardData.fromColumn != columnId
+        );
+    }
+
     return (
         <div ref={drop} className="h-100">
             <div className="d-flex d-justify-content-space-between d-align-items-center">
@@ -128,11 +136,7 @@ export const KanbanBoardColumns = ({
             </div>
             <div
                 className={`h-100 ${
-                    hoverColumn == columnId &&
-                    hoverCardData &&
-                    hoverCardData.fromColumn != columnId
-                        ? "column-highlight"
-                        : ""
+                    isCardHoverOnCurrentColumn() ? "column-highlight" : ""
                 }`}
             >
                 {columnData.cards.map((data) => (
@@ -142,49 +146,49 @@ export const KanbanBoardColumns = ({
                         key={data.card_id}
                     />
                 ))}
-                {hoverColumn == columnId &&
-                hoverCardData &&
-                hoverCardData.fromColumn != columnId ? (
+                {isCardHoverOnCurrentColumn() ? (
                     <div className="drop-hover-indicator">+</div>
                 ) : (
                     <></>
                 )}
                 {createNewCardComponents.map((c) => c)}
 
-                <KanbanActionButton
-                    label={"Add another card"}
-                    icon={<PlusVector className="button-icon" />}
-                    onClick={() => {
-                        const index = createNewCardComponents.length;
-                        setCreateNewCardComponents([
-                            ...createNewCardComponents,
-                            <CreateCard
-                                key={index}
-                                boardId={boardId}
-                                columnId={columnId}
-                                index={index}
-                                deleteCard={() => handleDeleteCard(index)}
-                                onCreateCard={async ({
-                                    card_name,
-                                    board_id,
-                                    column_id,
-                                }) => {
-                                    try {
-                                        await xhr(() =>
-                                            createCard(
-                                                board_id,
-                                                column_id,
-                                                card_name
-                                            )
-                                        );
-                                        handleDeleteCard(index);
-                                        refreshBoard();
-                                    } catch (error) {}
-                                }}
-                            ></CreateCard>,
-                        ]);
-                    }}
-                />
+                {!isCardHoverOnCurrentColumn() && (
+                    <KanbanActionButton
+                        label={"Add another card"}
+                        icon={<PlusVector className="button-icon" />}
+                        onClick={() => {
+                            const index = createNewCardComponents.length;
+                            setCreateNewCardComponents([
+                                ...createNewCardComponents,
+                                <CreateCard
+                                    key={index}
+                                    boardId={boardId}
+                                    columnId={columnId}
+                                    index={index}
+                                    deleteCard={() => handleDeleteCard(index)}
+                                    onCreateCard={async ({
+                                        card_name,
+                                        board_id,
+                                        column_id,
+                                    }) => {
+                                        try {
+                                            await xhr(() =>
+                                                createCard(
+                                                    board_id,
+                                                    column_id,
+                                                    card_name
+                                                )
+                                            );
+                                            handleDeleteCard(index);
+                                            refreshBoard();
+                                        } catch (error) {}
+                                    }}
+                                ></CreateCard>,
+                            ]);
+                        }}
+                    />
+                )}
             </div>
             <CreateColumnModal
                 columnTitle={columnData.column_name}

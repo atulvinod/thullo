@@ -11,6 +11,10 @@
     outline:none;
     border: none;
     width: 100%;
+    font-size: 1.6rem;
+    resize: none;
+    font-family: inherit;
+    overflow: hidden;
 }
 
 .create-card-form-input:placeholder{

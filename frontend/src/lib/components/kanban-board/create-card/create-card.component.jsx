@@ -28,12 +28,19 @@ export const CreateCard = ({
             >
                 {({ handleChange, values, handleSubmit }) => (
                     <form onSubmit={handleSubmit}>
-                        <input
+                        <textarea
+                            rows={1}
                             type="text"
                             value={values.card_name}
-                            onChange={handleChange}
+                            onChange={(event) => {
+                                let target = event.target;
+                                target.style.height = "1px";
+                                target.style.height =
+                                    target.scrollHeight + "px";
+                                handleChange(event);
+                            }}
                             className="create-card-form-input"
-                            placeholder="Enter a title for this card..."
+                            placeholder="Enter a title for the card..."
                             name="card_name"
                         />
                         <div className="mt-21 d-flex">

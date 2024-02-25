@@ -12,7 +12,7 @@ import {
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
-import { ClipLoader } from "react-spinners";
+import { MoonLoader as Loader } from "react-spinners";
 
 export const LoginPage = () => {
     const dispatch = useDispatch();
@@ -110,7 +110,7 @@ export const LoginPage = () => {
                             )}
                             <div className="user-button-container">
                                 <Button label={"Login"} type={"submit"} />
-                                <ClipLoader loading={isLoading} />
+                                <Loader loading={isLoading} />
                             </div>
                         </form>
                     )}

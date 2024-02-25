@@ -1,3 +1,4 @@
+import { findInArray } from "../../utils/common.util";
 import { BOARD_ACTION_TYPES } from "./board.types";
 
 export const INITIAL_STATE = {
@@ -5,6 +6,7 @@ export const INITIAL_STATE = {
     allBoards: [],
     isLoading: true,
     currentBoard: null,
+    currentCardBeingProcessed: null
 }
 
 export const boardReducer = (state = INITIAL_STATE, payload = {}) => {
@@ -20,7 +22,8 @@ export const boardReducer = (state = INITIAL_STATE, payload = {}) => {
             return {
                 ...state,
                 isLoading: false,
-                allBoards: action
+                allBoards: action,
+                currentCardBeingProcessed: null
             }
         case BOARD_ACTION_TYPES.SET_LOADING: {
             return {
@@ -33,6 +36,29 @@ export const boardReducer = (state = INITIAL_STATE, payload = {}) => {
                 ...state,
                 currentBoard: action,
                 isLoading: false
+            }
+        }
+        case BOARD_ACTION_TYPES.SET_CARD_BEING_PROCESSED: {
+            return {
+                ...state,
+                currentCardBeingProcessed: action
+            }
+        }
+        case BOARD_ACTION_TYPES.MOVE_CARD: {
+            const { card_id, from_column: from_column_id, to_column: to_column_id } = action;
+            const newBoardConfig = { ...state.currentBoard };
+            const [fromColumnArray] = newBoardConfig.columns.filter((c) => c.column_id === from_column_id);
+            const [toColumnArray] = newBoardConfig.columns.filter((c) => c.column_id === to_column_id);
+
+            const fromColumnIndex = findInArray(newBoardConfig.columns, (obj) => obj.column_id === from_column_id);
+            const toColumnIndex = findInArray(newBoardConfig.columns, (obj) => obj.column_id === to_column_id)
+
+            const [cardData] = fromColumnArray.cards.filter((c) => c.card_id === card_id)
+            newBoardConfig.columns[toColumnIndex].cards = [...toColumnArray.cards, cardData];
+            newBoardConfig.columns[fromColumnIndex].cards = [...fromColumnArray.cards.filter((c) => c.card_id !== card_id)]
+            return {
+                ...state,
+                currentBoard: newBoardConfig
             }
         }
         default:

@@ -67,15 +67,15 @@ router.post('/:id/card/:card_id/labels', async (req, res, logger) => {
 router.patch('/:id/card/:card_id/cover_image', async (req, res, logger) => {
     const boards = new Boards(logger);
     await boards.setCardCover(req.params.card_id, req.body.cover_image_url);
-    return res.json({ message: 'Cover image updated' })
-})
+    return res.json({ message: 'Cover image updated' });
+});
 
 router.patch('/:id/card/:card_id/column', async (req, res, logger) => {
     const boards = new Boards(logger);
     const { id, card_id } = req.params;
     await boards.moveCard(id, card_id, req.body.from_column_id, req.body.to_column_id);
-    return res.json({ message: 'Card moved' })
-})
+    return res.json({ message: 'Card moved' });
+});
 
 router.post('/:id/card/:card_id/members', async (req, res, logger) => {
     const boards = new Boards(logger);
@@ -103,7 +103,7 @@ router.delete('/:id/card/:card_id/attachments/:attachment_id', async (req, res, 
     const boards = new Boards(logger);
     await boards.deleteAttachment(req.params.attachment_id);
     return res.json({
-        message: 'Attachment deleted'
+        message: 'Attachment deleted',
     });
 });
 
@@ -121,14 +121,14 @@ router.post('/:id/card/:card_id/comments', async (req, res, logger) => {
 router.delete('/:id/card/:card_id/comments/:comment_id', async (req, res, logger) => {
     const boards = new Boards(logger);
     await boards.deleteCommentFromCard(req.params.comment_id);
-    return res.json({ message: "Comment deleted" });
-})
+    return res.json({ message: 'Comment deleted' });
+});
 
 router.patch('/:id/card/:card_id/comments/:comment_id', async (req, res, logger) => {
     const boards = new Boards(logger);
     await boards.updateCardComment(req.params.comment_id, req.body.comment);
     return res.json({ message: 'Comment updated' });
-})
+});
 
 router.get('/:id', async (req, res, logger) => {
     const boards = new Boards(logger);
@@ -174,6 +174,20 @@ router.get('/:board_id/card/:card_id/search_user', async (req, res, logger) => {
     const { query } = req.query;
     const users = await boards.searchUserForCardAssignment(board_id, card_id, query);
     return res.json({ data: users });
+});
+
+router.delete('/:board_id/card/:card_id', async (req, res, logger) => {
+    const boards = new Boards(logger);
+    const { board_id, card_id } = req.params;
+    await boards.deleteCard(req.user.id, board_id, card_id);
+    return res.json({ message: 'Card deleted' });
+});
+
+router.delete('/:board_id', async (req, res, logger) => {
+    const boards = new Boards(logger);
+    const { board_id } = req.params;
+    await boards.deleteBoard(req.user.id, board_id);
+    return res.json({ message: 'Deleted board' });
 })
 
 module.exports = router;

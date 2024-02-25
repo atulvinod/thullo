@@ -3,9 +3,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { useDispatch, useSelector } from "react-redux";
 import {
-    BOARD_ACTION_TYPES,
     fetchCurrentBoard,
-    getBoardColumns,
     getBoardsIsLoading,
     getCurrentBoard,
 } from "../../../store/board";
@@ -17,22 +15,15 @@ import { useEffect, useState } from "react";
 import {
     addMembersToBoard,
     createColumn,
-    getBoardDetails,
     searchUserForBoardAssignment,
 } from "../../../services/board.services";
-import { ClipLoader } from "react-spinners";
-import { createAction } from "../../../utils/reducer.utils";
-import { CustomModal } from "../../custom-modal/custom-modal.component";
-import { FormInput } from "../../form-input/form-input.component";
-import { Formik } from "formik";
+import { MoonLoader as Loader } from "react-spinners";
 import { KanbanActionButton } from "../kanban-action-button/kanban-action-button.component";
 import { CreateColumnModal } from "../create-column-modal/create-column-modal.component";
 import { MoreHorizVector } from "../../../vectors/components/morehoriz.vector";
 import { PlusVector } from "../../../vectors/components/plus.vector";
-import Popup from "reactjs-popup";
 import { UserFinder } from "../../user-finder/user-finder.component";
 import { MenuModal } from "../../menu-modal/menu-modal.component";
-import { CloseVector } from "../../../vectors/components/close.vector";
 import { KanbanActionPopup } from "../action-popup/action-popup.component";
 import { BoardVisibilityPopup } from "../board-visibility-popup/board-visibility.component";
 import { ToastContainer } from "react-toastify";
@@ -56,7 +47,6 @@ export const KanbanBoard = () => {
                 setUsersToInvite(null);
             }
         } catch (error) {}
-     
     };
 
     const getAdminUser = (members, created_by_user_id) => {
@@ -73,11 +63,17 @@ export const KanbanBoard = () => {
         dispatch(fetchCurrentBoard(board_id));
     }, [board_id]);
 
+    useEffect(() => {
+        if (currentBoard) {
+            document.title = `Th | ${currentBoard.board_title}`;
+        }
+    }, [isLoading]);
+
     return (
         <div className=" h-100">
             {isLoading ? (
                 <div className="d-flex d-justify-content-center d-align-items-center h-100">
-                    <ClipLoader size={80} />
+                    <Loader size={80} />
                 </div>
             ) : (
                 <div className="kanban-board-container">

@@ -7,6 +7,7 @@ import { LoginPage } from './lib/pages/user/login/login.page';
 import AllBoardsPage from './lib/pages/all-boards/allboards.page';
 
 function App() {
+  document.title = 'Thullo';
   return (
     <Routes>
       <Route path='/' element={<AppRoot />}>

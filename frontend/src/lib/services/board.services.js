@@ -58,7 +58,7 @@ export const createCard = async (board_id, column_id, card_name) => {
     return data.data;
 }
 
-export const moveCard = async (board_id, card_id, from_column_id, to_column_id) => {
+export const sendMoveCardRequest = async (board_id, card_id, from_column_id, to_column_id) => {
     await client.patch(`/boards/${board_id}/card/${card_id}/column`, { from_column_id, to_column_id })
 }
 

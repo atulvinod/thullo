@@ -1,5 +1,6 @@
 const express = require('express');
 const _logger = require('../lib/logger');
+const RequestError = require('@errors/RequestError');
 
 /**
  * Returns custom express `Router`
@@ -36,7 +37,11 @@ function getCustomHandler(handler) {
         try {
             await handler(req, res, _logger.getLogger(req.logParams, req), next);
         } catch (error) {
-            next(error);
+            if (error instanceof RequestError) {
+                next(error);
+            } else {
+                next(new Error('Unexpected error occurred'));
+            }
         }
     };
 }

@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import {
     fetchBoards,
     getHoverColumn,
+    moveCardBetweenColumn,
+    setCurrentCardBeingProcessed,
     setHoverColumn,
 } from "../../../store/board";
 import { useState } from "react";
@@ -18,7 +20,7 @@ import { CreateColumnModal } from "../create-column-modal/create-column-modal.co
 import {
     createCard,
     deleteColumn,
-    moveCard,
+    sendMoveCardRequest,
     updateColumnTitle,
 } from "../../../services/board.services";
 import { PlusVector } from "../../../vectors/components/plus.vector";
@@ -48,18 +50,36 @@ export const KanbanBoardColumns = ({
             dispatch(setHoverColumn(null));
             setHoverCardData(null);
             if (cardData.fromColumn != columnId) {
-                xhr(() =>
-                    moveCard(
+                xhr(async () => {
+                    dispatch(setCurrentCardBeingProcessed(cardData.cardId));
+                    dispatch(
+                        moveCardBetweenColumn(
+                            cardData.cardId,
+                            cardData.fromColumn,
+                            columnId
+                        )
+                    );
+                    await sendMoveCardRequest(
                         boardId,
                         cardData.cardId,
                         cardData.fromColumn,
                         columnId
-                    )
-                )
+                    );
+                })
                     .then(() => {
+                        dispatch(setCurrentCardBeingProcessed(null));
                         refreshBoard();
                     })
-                    .catch((err) => {});
+                    .catch((err) => {
+                        //incase of error, revert card move
+                        dispatch(
+                            moveCardBetweenColumn(
+                                cardData.cardId,
+                                columnId,
+                                cardData.fromColumn
+                            )
+                        );
+                    });
             }
         },
         collect: (monitor) => ({
@@ -94,8 +114,8 @@ export const KanbanBoardColumns = ({
 
     return (
         <div ref={drop} className="h-100">
-            <div className="d-flex d-justify-content-space-between d-align-items-center">
-                <h3 className="mb-14 text-xl">{columnData.column_name}</h3>
+            <div className="d-flex d-justify-content-space-between d-align-items-center column-header">
+                <h3 className="text-xl">{columnData.column_name}</h3>
                 <Popup
                     trigger={
                         <span>

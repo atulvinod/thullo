@@ -44,3 +44,14 @@
     border-radius: 1.2rem;
     background-color: #82a6ff73;
 }
+
+.column-header{
+    position: sticky;
+    background-color: #f8f9fd;
+    top: 0;
+    z-index: 2;
+    border: 0.5px solid lightgrey;
+    border-radius: 10px;
+    padding: 1.2rem 1rem;
+    margin-bottom: 1.4rem;
+}

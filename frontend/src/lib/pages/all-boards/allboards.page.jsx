@@ -11,7 +11,7 @@ import {
     getBoardsIsLoading,
 } from "../../store/board";
 import { BoardCard } from "../../components/board-card/board-card.component";
-import { ClipLoader } from "react-spinners";
+import { MoonLoader as Loader } from "react-spinners";
 import { PlusVector } from "../../vectors/components/plus.vector";
 
 const AllBoardsPage = () => {
@@ -39,7 +39,7 @@ const AllBoardsPage = () => {
                 </div>
                 {isLoading ? (
                     <div className="d-flex d-justify-content-center w-100">
-                        <ClipLoader isLoading={isLoading} size={90} />
+                        <Loader isLoading={isLoading} size={90} />
                     </div>
                 ) : (
                     <div className="all-boards-cards-container">

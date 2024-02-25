@@ -64,7 +64,11 @@ class Board extends Base {
             .whereNot('bt.created_by_user_id', current_user_id)
             .whereRaw(`bt.id IN (SELECT board_id from board_members where user_id = ${current_user_id})`);
 
-        const [non_private_boards, current_user_private_boards, participating_private_boards] = await Promise.all(
+        const [
+            non_private_boards,
+            current_user_private_boards,
+            participating_private_boards,
+        ] = await Promise.all(
             [
                 non_private_boards_query,
                 current_user_private_boards_query,
@@ -266,7 +270,13 @@ class Board extends Base {
         return columns;
     }
 
+    async validateBoardIsAvailable(board_id) {
+        const board = await this.getSlaveDatabase().table(BOARDS_TABLE).where('id', board_id).first();
+        if (!board) throw new RequestError('Board not found', http_status.StatusCodes.NOT_FOUND);
+    }
+
     async getBoardDetails(board_id) {
+        await this.validateBoardIsAvailable(board_id);
         const board_data_query = this.getSlaveDatabase()
             .table(BOARDS_TABLE)
             .where('id', board_id)
@@ -571,6 +581,86 @@ class Board extends Base {
             ]);
 
         return get_users_for_card_query;
+    }
+
+    async validateAdminPermission(board_id, user_id) {
+        const board_details = await this.getSlaveDatabase()
+            .table(`${BOARDS_TABLE} as b`)
+            .select('b.created_by_user_id')
+            .where('b.id', board_id)
+            .first();
+        if (board_details.created_by_user_id != user_id) {
+            throw new RequestError('Unauthorized', http_status.StatusCodes.UNAUTHORIZED);
+        }
+    }
+
+    async deleteCard(user_id, board_id, card_id) {
+        await this.validateAdminPermission(board_id, user_id);
+        await this.getMasterDatabase().table(`${CARD}`).where('id', card_id).del();
+    }
+
+    async deleteBoard(user_id, board_id) {
+        await this.validateAdminPermission(board_id, user_id);
+        const tx = await this.getRawDatabase().masterBaseDb().transaction();
+        const delete_promises = [];
+
+        const card_ids_query = await this.getSlaveDatabase().table(CARD)
+            .where('board_id', board_id)
+            .select('id');
+
+        const card_ids = card_ids_query.reduce((agg, v) => {
+            agg.push(v.id);
+            return agg;
+        }, []);
+
+        const delete_board = this.getMasterDatabase().table(BOARDS_TABLE).where('id', board_id).del()
+            .transacting(tx);
+        delete_promises.push(delete_board);
+
+        const delete_members = this.getMasterDatabase().table(BOARD_MEMBERS_TABLE)
+            .where('board_id', board_id).del()
+            .transacting(tx);
+        delete_promises.push(delete_members);
+
+        const delete_board_columns = this.getMasterDatabase().table(COLUMNS_TABLE)
+            .where('board_id', board_id).del()
+            .transacting(tx);
+        delete_promises.push(delete_board_columns);
+
+        if (card_ids && card_ids.length) {
+            const delete_card = this.getMasterDatabase().table(CARD)
+                .whereIn('id', card_ids)
+                .del()
+                .transacting(tx);
+            delete_promises.push(delete_card);
+
+            const delete_card_attachments = this.getMasterDatabase().table(CARD_ATTACHMENTS)
+                .whereIn('card_id', card_ids)
+                .del()
+                .transacting(tx);
+            delete_promises.push(delete_card_attachments);
+
+            const delete_card_members = this.getMasterDatabase().table(CARD_MEMBERS)
+                .whereIn('card_id', card_ids)
+                .del()
+                .transacting(tx);
+            delete_promises.push(delete_card_members);
+
+            const delete_card_comments = this.getMasterDatabase().table(CARD_COMMENTS)
+                .whereIn('card_id', card_ids)
+                .del()
+                .transacting(tx);
+            delete_promises.push(delete_card_comments);
+
+            const delete_card_labels = this.getMasterDatabase().table(CARD_LABELS)
+                .whereIn('card_id', card_ids)
+                .del()
+                .transacting(tx);
+            delete_promises.push(delete_card_labels);
+        }
+
+        await Promise.all(delete_promises);
+        await tx.commit();
     }
 }
 module.exports = Board;

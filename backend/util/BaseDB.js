@@ -88,6 +88,14 @@ class BaseDB {
         return this.#getQueryBuilder(this.#slave_db, logger);
     }
 
+    masterBaseDb() {
+        return this.#master_db;
+    }
+
+    slaveBaseDb() {
+        return this.#slave_db;
+    }
+
     /**
      * @param {knex.Knex} db
      * @param {Logger} logger

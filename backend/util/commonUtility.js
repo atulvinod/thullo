@@ -2,6 +2,7 @@ const fs = require('fs');
 const dateFormat = require('dateformat');
 const uuid = require('uuid');
 const ipAddress = require('ip').address();
+const path = require('path');
 
 module.exports = {
     /**
@@ -20,12 +21,18 @@ module.exports = {
     isTrue(value) {
         return (value === true);
     },
+
+    getProjectRoot() {
+        return path.join(__dirname, '..');
+    },
+
     /**
      * Creates a directory, if it does not exist
      * @param {fs.PathLike} directory
      */
     makeDirectoryIfNotPresent(directory) {
-        fs.existsSync(directory) || fs.mkdirSync(directory);
+        const dir = path.join(this.getProjectRoot(), directory);
+        fs.existsSync(dir) || fs.mkdirSync(dir);
     },
 
     /**

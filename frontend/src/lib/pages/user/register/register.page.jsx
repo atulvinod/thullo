@@ -2,7 +2,7 @@ import { Formik } from "formik";
 import "../user-page.style.css";
 import { FormInput } from "../../../components/form-input/form-input.component";
 import { Button } from "../../../components/button/button.component";
-import { ClipLoader } from "react-spinners";
+import { MoonLoader as Loader } from "react-spinners";
 import { UserImageInput } from "../../../components/user-image-input/user-image-input.component";
 import { validateEmail } from "../../../utils/common.util";
 import { registerUser } from "../../../services/user.services";
@@ -143,7 +143,7 @@ export const RegisterPage = () => {
                             )}
                             <div className="user-button-container">
                                 <Button label={"Register"} type={"submit"} />
-                                <ClipLoader loading={isLoading} />
+                                <Loader loading={isLoading} />
                             </div>
                         </form>
                     )}

@@ -32,7 +32,7 @@ module.exports = {
      */
     makeDirectoryIfNotPresent(directory) {
         const dir = path.join(this.getProjectRoot(), directory);
-        fs.existsSync(dir) || fs.mkdirSync(dir);
+        fs.existsSync(directory) || fs.mkdirSync(directory);
     },
 
     /**

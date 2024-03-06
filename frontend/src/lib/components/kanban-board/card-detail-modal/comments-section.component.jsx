@@ -6,14 +6,14 @@ import { Formik } from "formik";
 import { getCurrentBoard } from "../../../store/board";
 import { addCommentToCard } from "../../../services/board.services";
 import { useRefreshBoard } from "../hooks/use-refresh-board.hook";
-import { useXHR } from "../../../hooks/xhr.hooks";
+import { useGlobalLoader } from "../../../hooks/xhr.hooks";
 import { Comment } from "./comment.component";
 
 export const CommentsSection = ({ cardData }) => {
     const user = useSelector(currentUserSelector);
     const currentBoard = useSelector(getCurrentBoard);
     const refreshBoard = useRefreshBoard();
-    const xhr = useXHR();
+    const showGlobalLoader = useGlobalLoader();
 
     return (
         <div>
@@ -25,7 +25,7 @@ export const CommentsSection = ({ cardData }) => {
                     onSubmit={async (values) => {
                         try {
                             const { comment } = values;
-                            xhr(() =>
+                            showGlobalLoader(() =>
                                 addCommentToCard(
                                     currentBoard.board_id,
                                     cardData.card_id,

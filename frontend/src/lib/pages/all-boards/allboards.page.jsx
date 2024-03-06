@@ -26,7 +26,7 @@ const AllBoardsPage = () => {
 
     return (
         <>
-            <div className="all-boards-page-container">
+            <div className="all-boards-page-container h-100">
                 <div className="all-boards-heading-container d-flex d-flex-direction-row w-100 d-justify-content-space-between">
                     <span className="all-boards-heading">All boards</span>
                     <Button
@@ -38,7 +38,7 @@ const AllBoardsPage = () => {
                     />
                 </div>
                 {isLoading ? (
-                    <div className="d-flex d-justify-content-center w-100">
+                    <div className="d-flex d-justify-content-center w-100 d-align-items-center all-boards-loader-container">
                         <Loader isLoading={isLoading} size={90} />
                     </div>
                 ) : (

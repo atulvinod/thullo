@@ -27,7 +27,7 @@ import { MenuModal } from "../../menu-modal/menu-modal.component";
 import { KanbanActionPopup } from "../action-popup/action-popup.component";
 import { BoardVisibilityPopup } from "../board-visibility-popup/board-visibility.component";
 import { ToastContainer } from "react-toastify";
-import { useXHR } from "../../../hooks/xhr.hooks";
+import { useGlobalLoader } from "../../../hooks/xhr.hooks";
 
 export const KanbanBoard = () => {
     const isLoading = useSelector(getBoardsIsLoading);
@@ -37,12 +37,14 @@ export const KanbanBoard = () => {
     const [showMenuModal, setShowMenuModal] = useState(false);
     const { board_id } = useParams();
     const dispatch = useDispatch();
-    const xhr = useXHR();
+    const showGlobalLoader = useGlobalLoader();
 
     const handleUserInvitation = async () => {
         try {
             if (usersToInvite && usersToInvite.length) {
-                await xhr(() => addMembersToBoard(board_id, usersToInvite));
+                await showGlobalLoader(() =>
+                    addMembersToBoard(board_id, usersToInvite)
+                );
                 dispatch(fetchCurrentBoard(board_id));
                 setUsersToInvite(null);
             }
@@ -163,7 +165,7 @@ export const KanbanBoard = () => {
                         showCreateColumnModal={showCreateColumnModal}
                         onSuccess={() => dispatch(fetchCurrentBoard(board_id))}
                         onSubmit={(column_title, column_order_index) =>
-                            xhr(
+                            showGlobalLoader(
                                 () =>
                                     createColumn(
                                         board_id,

@@ -35,7 +35,8 @@ export const boardReducer = (state = INITIAL_STATE, payload = {}) => {
             return {
                 ...state,
                 currentBoard: action,
-                isLoading: false
+                isLoading: false,
+                currentCardBeingProcessed: null
             }
         }
         case BOARD_ACTION_TYPES.SET_CARD_BEING_PROCESSED: {
@@ -59,6 +60,27 @@ export const boardReducer = (state = INITIAL_STATE, payload = {}) => {
             return {
                 ...state,
                 currentBoard: newBoardConfig
+            }
+        }
+
+        case BOARD_ACTION_TYPES.SHOW_NEW_DUMMY_CARD: {
+            const { column_id, card_name } = action;
+            const newBoardConfig = { ...state.currentBoard };
+            const [requiredColumn] = newBoardConfig.columns.filter((c) => c.column_id === column_id)
+            requiredColumn.cards.push({
+                card_attachments: [],
+                card_comments: [],
+                card_id: -1,
+                card_labels: [],
+                card_members: [],
+                card_name,
+                cover_image_url: null,
+            })
+
+            return {
+                ...state,
+                currentBoard: newBoardConfig,
+                currentCardBeingProcessed: -1
             }
         }
         default:

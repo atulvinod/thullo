@@ -22,6 +22,8 @@ export const CreateColumnModal = ({
                     left: "50%",
                     transform: "translate(-50%)",
                     height: "fit-content",
+                    zIndex: "2",
+                    
                 },
             }}
         >

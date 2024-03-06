@@ -10,13 +10,13 @@ import { addCoverToCard } from "../../../services/board.services";
 import { useSelector } from "react-redux";
 import { getCurrentBoard } from "../../../store/board";
 import { PictureVector } from "../../../vectors/components/picture.vector";
-import { useXHR } from "../../../hooks/xhr.hooks";
+import { useGlobalLoader } from "../../../hooks/xhr.hooks";
 
 export const AddCover = ({ cardDetail }) => {
     const [searchResults, setSearchResults] = useState([]);
     const refreshBoard = useRefreshBoard();
     const currentBoard = useSelector(getCurrentBoard);
-    const xhr = useXHR();
+    const showGlobalLoader = useGlobalLoader();
 
     const search = debounce((event) => {
         const { value: keyword } = event.target;
@@ -30,7 +30,7 @@ export const AddCover = ({ cardDetail }) => {
     }, 1000);
 
     const handleOnResultClick = async (cover_image_url) => {
-        await xhr(() =>
+        await showGlobalLoader(() =>
             addCoverToCard(
                 currentBoard.board_id,
                 cardDetail.card_id,

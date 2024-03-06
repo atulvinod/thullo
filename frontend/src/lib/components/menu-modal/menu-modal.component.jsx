@@ -18,7 +18,7 @@ import { getCurrentBoard } from "../../store/board";
 import moment from "moment";
 import { ProfileCircle } from "../../vectors/components/profile-circle.vector";
 import { DocumentVector } from "../../vectors/components/document.vector";
-import { useXHR } from "../../hooks/xhr.hooks";
+import { useGlobalLoader } from "../../hooks/xhr.hooks";
 
 export const MenuModal = ({
     setModalIsOpen,
@@ -28,7 +28,7 @@ export const MenuModal = ({
 }) => {
     const refreshBoard = useRefreshBoard();
     const currentBoard = useSelector(getCurrentBoard);
-    const xhr = useXHR();
+    const showGlobalLoader = useGlobalLoader();
     return (
         <>
             {isModalOpen ? (
@@ -101,7 +101,7 @@ export const MenuModal = ({
                                                 ) {
                                                     return;
                                                 }
-                                                await xhr(() =>
+                                                await showGlobalLoader(() =>
                                                     deleteBoardMember(
                                                         currentBoard.board_id,
                                                         member.board_member_id

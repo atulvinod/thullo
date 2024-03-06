@@ -49,7 +49,7 @@
     position: sticky;
     background-color: #f8f9fd;
     top: 0;
-    z-index: 2;
+    z-index: 1;
     border: 0.5px solid lightgrey;
     border-radius: 10px;
     padding: 1.2rem 1rem;

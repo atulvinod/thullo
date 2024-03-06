@@ -5,11 +5,12 @@ import { KanbanBoardCard } from "../card/kanban-board-card.component";
 import { DragItemTypes } from "../../../utils/drag.types";
 import { useDispatch, useSelector } from "react-redux";
 import {
-    fetchBoards,
+    getCardBeingProcessed,
     getHoverColumn,
     moveCardBetweenColumn,
     setCurrentCardBeingProcessed,
     setHoverColumn,
+    showDummyNewCard,
 } from "../../../store/board";
 import { useState } from "react";
 import { store } from "../../../store/store";
@@ -28,7 +29,7 @@ import { CreateCard } from "../create-card/create-card.component";
 
 import { pullAt } from "lodash";
 import { useRefreshBoard } from "../hooks/use-refresh-board.hook";
-import { useXHR } from "../../../hooks/xhr.hooks";
+import { useGlobalLoader } from "../../../hooks/xhr.hooks";
 
 export const KanbanBoardColumns = ({
     boardId,
@@ -38,11 +39,13 @@ export const KanbanBoardColumns = ({
 }) => {
     const dispatch = useDispatch();
     const hoverColumn = useSelector(getHoverColumn);
+    const cardBeingProcessed = useSelector(getCardBeingProcessed);
+
     const [hoverCardData, setHoverCardData] = useState();
     const [showCreateColumnModal, setShowCreateColumnModal] = useState();
     const [createNewCardComponents, setCreateNewCardComponents] = useState([]);
     const refreshBoard = useRefreshBoard();
-    const xhr = useXHR();
+    const showGlobalLoader = useGlobalLoader();
 
     const [{ isOver }, drop] = useDrop(() => ({
         accept: DragItemTypes.CARD,
@@ -50,7 +53,7 @@ export const KanbanBoardColumns = ({
             dispatch(setHoverColumn(null));
             setHoverCardData(null);
             if (cardData.fromColumn != columnId) {
-                xhr(async () => {
+                showGlobalLoader(async () => {
                     dispatch(setCurrentCardBeingProcessed(cardData.cardId));
                     dispatch(
                         moveCardBetweenColumn(
@@ -138,7 +141,7 @@ export const KanbanBoardColumns = ({
                             <li
                                 onClick={async () => {
                                     try {
-                                        await xhr(() =>
+                                        await showGlobalLoader(() =>
                                             deleteColumn(
                                                 boardId,
                                                 columnData.column_id
@@ -164,6 +167,7 @@ export const KanbanBoardColumns = ({
                         cardData={data}
                         columnData={columnData}
                         key={data.card_id}
+                        cardBeingProcessed={cardBeingProcessed}
                     />
                 ))}
                 {isCardHoverOnCurrentColumn() ? (
@@ -193,7 +197,13 @@ export const KanbanBoardColumns = ({
                                         column_id,
                                     }) => {
                                         try {
-                                            await xhr(() =>
+                                            dispatch(
+                                                showDummyNewCard(
+                                                    column_id,
+                                                    card_name
+                                                )
+                                            );
+                                            await showGlobalLoader(() =>
                                                 createCard(
                                                     board_id,
                                                     column_id,
@@ -216,7 +226,7 @@ export const KanbanBoardColumns = ({
                 showCreateColumnModal={showCreateColumnModal}
                 onSuccess={() => setShowCreateColumnModal(false)}
                 onSubmit={async (column_title) => {
-                    xhr(() =>
+                    showGlobalLoader(() =>
                         updateColumnTitle(
                             boardId,
                             columnData.column_id,

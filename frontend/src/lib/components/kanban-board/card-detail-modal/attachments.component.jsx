@@ -11,13 +11,13 @@ import { getCurrentBoard } from "../../../store/board";
 import { useRefreshBoard } from "../hooks/use-refresh-board.hook";
 import { Button, ButtonTypes } from "../../button/button.component";
 import * as moment from "moment";
-import { useXHR } from "../../../hooks/xhr.hooks";
+import { useGlobalLoader } from "../../../hooks/xhr.hooks";
 
 export const Attachments = ({ cardData, ...props }) => {
     const inputFileRef = useRef(null);
     const currentBoard = useSelector(getCurrentBoard);
     const refreshBoard = useRefreshBoard();
-    const xhr = useXHR();
+    const showGlobalLoader = useGlobalLoader();
 
     return (
         <BaseCardDetailContainer
@@ -44,7 +44,7 @@ export const Attachments = ({ cardData, ...props }) => {
                             value={values.attachment_file}
                             onChange={async (event) => {
                                 const [file] = event.target.files;
-                                xhr(() =>
+                                showGlobalLoader(() =>
                                     addAttachmentToCard(
                                         currentBoard.board_id,
                                         cardData.card_id,
@@ -108,7 +108,7 @@ export const Attachments = ({ cardData, ...props }) => {
                                     label={"Delete"}
                                     onClick={async () => {
                                         try {
-                                            await xhr(() =>
+                                            await showGlobalLoader(() =>
                                                 deleteCardAttachment(
                                                     currentBoard.board_id,
                                                     cardData.card_id,

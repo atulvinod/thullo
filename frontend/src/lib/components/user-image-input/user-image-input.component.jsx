@@ -4,7 +4,6 @@ import { v4 as uuidv4 } from "uuid";
 
 import cameraImg from "./camera.svg";
 import { useRef, useState } from "react";
-import Modal from "react-modal";
 import { ReactCrop } from "react-image-crop";
 import { Button } from "../button/button.component";
 import { canvasPreview } from "./canvas-preview";

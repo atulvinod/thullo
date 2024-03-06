@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { createAction } from "../utils/reducer.utils";
 import { APP_ACTION_TYPES } from "../store/app";
 
-export const useXHR = (showToast = true) => {
+export const useGlobalLoader = (showToast = true) => {
     const dispatch = useDispatch();
     return async function (apiCall, success = 'Success', error_message = 'Something went wrong') {
 

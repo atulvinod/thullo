@@ -8,12 +8,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCurrentBoard } from "../../../store/board";
 import { useRefreshBoard } from "../hooks/use-refresh-board.hook";
 import { LockVector } from "../../../vectors/components/lock.vector";
-import { useXHR } from "../../../hooks/xhr.hooks";
+import { useGlobalLoader } from "../../../hooks/xhr.hooks";
 
 export const BoardVisibilityPopup = ({ ...props }) => {
     const currentBoard = useSelector(getCurrentBoard);
     const refreshBoard = useRefreshBoard();
-    const xhr = useXHR();
+    const showGlobalLoader = useGlobalLoader();
     return (
         <KanbanActionPopup
             heading={"Visibility"}
@@ -42,7 +42,7 @@ export const BoardVisibilityPopup = ({ ...props }) => {
                             if (!currentBoard.is_board_private) {
                                 return;
                             }
-                            await xhr(() =>
+                            await showGlobalLoader(() =>
                                 updateBoardVisibility(
                                     currentBoard.board_id,
                                     false
@@ -50,7 +50,6 @@ export const BoardVisibilityPopup = ({ ...props }) => {
                             );
                             refreshBoard();
                         } catch (error) {}
-                        
                     }}
                 />
                 <BoardVisibilityActionComponent
@@ -58,18 +57,18 @@ export const BoardVisibilityPopup = ({ ...props }) => {
                     subHeading={"Only board members can see this this"}
                     isSelected={currentBoard.is_board_private}
                     onClick={async () => {
-                        try{
+                        try {
                             if (currentBoard.is_board_private) {
                                 return;
                             }
-                            await xhr(() =>
-                                updateBoardVisibility(currentBoard.board_id, true)
+                            await showGlobalLoader(() =>
+                                updateBoardVisibility(
+                                    currentBoard.board_id,
+                                    true
+                                )
                             );
                             refreshBoard();
-                        }catch(error){
-                            
-                        }
-                       
+                        } catch (error) {}
                     }}
                 />
             </div>

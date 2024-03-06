@@ -6,7 +6,7 @@ import { createBoardAction, fetchBoards } from "../../../store/board";
 import { useDispatch } from "react-redux";
 import { Formik } from "formik";
 import { createBoard } from "../../../services/board.services";
-import { useXHR } from "../../../hooks/xhr.hooks";
+import { useGlobalLoader } from "../../../hooks/xhr.hooks";
 
 export const CreateBoard = ({ setModalIsOpen }) => {
     const coverImageInputRef = useRef(null);
@@ -14,7 +14,7 @@ export const CreateBoard = ({ setModalIsOpen }) => {
 
     const [previewImage, setPreviewImage] = useState(null);
     const dispatch = useDispatch();
-    const xhr = useXHR();
+    const showGlobalLoader = useGlobalLoader();
 
     const buttonStyle = {
         width: "50%",
@@ -38,7 +38,7 @@ export const CreateBoard = ({ setModalIsOpen }) => {
                 }}
                 onSubmit={async (values, { isSubmitting }) => {
                     try {
-                        await xhr(() => createBoard(values));
+                        await showGlobalLoader(() => createBoard(values));
                         dispatch(fetchBoards());
                         setModalIsOpen(false);
                     } catch (error) {}

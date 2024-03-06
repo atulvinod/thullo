@@ -11,7 +11,7 @@ import { FormInputWithAction } from "../form-input-with-action/form-input-with-a
 import { ProgressBar } from "../progress-bar/progress-bar.component";
 import { apiCallStateSelector } from "../../store/app";
 import { debounce, take } from "lodash";
-import { useXHR } from "../../hooks/xhr.hooks";
+import { useGlobalLoader } from "../../hooks/xhr.hooks";
 import { searchBoards } from "../../services/board.services";
 import { useState } from "react";
 import { useComponentVisible } from "../../hooks/component-visible.hooks";
@@ -25,14 +25,14 @@ export const NavBar = () => {
     const [searchResults, setSearchResults] = useState([]);
     const { ref, isComponentVisible, setIsComponentVisible } =
         useComponentVisible(false);
-    const xhr = useXHR(false);
+    const showGlobalLoader = useGlobalLoader(false);
 
     const search = debounce(async (query) => {
         try {
             if (!query || !query.length) {
                 return;
             }
-            const result = await xhr(() => searchBoards(query));
+            const result = await showGlobalLoader(() => searchBoards(query));
             setIsComponentVisible(true);
             setSearchResults(result.boards);
         } catch (error) {}

@@ -10,12 +10,12 @@ import { getCurrentBoard } from "../../../store/board";
 import { useRefreshBoard } from "../hooks/use-refresh-board.hook";
 import { TagRow } from "../../tag-row/tag-row.component";
 import { LabelVector } from "../../../vectors/components/label.vector";
-import { useXHR } from "../../../hooks/xhr.hooks";
+import { useGlobalLoader } from "../../../hooks/xhr.hooks";
 
 export const AddLabel = ({ cardDetail }) => {
     const currentBoard = useSelector(getCurrentBoard);
     const refreshBoard = useRefreshBoard();
-    const xhr = useXHR();
+    const showGlobalLoader = useGlobalLoader();
 
     const colors = [
         "#219653",
@@ -36,19 +36,19 @@ export const AddLabel = ({ cardDetail }) => {
     const [labelText, setLabelText] = useState(null);
 
     const postLabel = async () => {
-      try {
-          if (labelText && selectedColor) {
-              await xhr(() =>
-                  addLabelToCard(
-                      currentBoard.board_id,
-                      cardDetail.card_id,
-                      selectedColor,
-                      labelText
-                  )
-              );
-              refreshBoard();
-          }
-      } catch (error) {}
+        try {
+            if (labelText && selectedColor) {
+                await showGlobalLoader(() =>
+                    addLabelToCard(
+                        currentBoard.board_id,
+                        cardDetail.card_id,
+                        selectedColor,
+                        labelText
+                    )
+                );
+                refreshBoard();
+            }
+        } catch (error) {}
     };
 
     return (

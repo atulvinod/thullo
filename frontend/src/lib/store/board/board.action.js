@@ -26,3 +26,7 @@ export const setCurrentCardBeingProcessed = (card_id) => (dispatch) => {
 export const moveCardBetweenColumn = (card_id, from_column, to_column) => async (dispatch) => {
     dispatch(createAction(BOARD_ACTION_TYPES.MOVE_CARD, { card_id, from_column, to_column }))
 }
+
+export const showDummyNewCard = (column_id, card_name) => (dispatch) =>{
+    dispatch(createAction(BOARD_ACTION_TYPES.SHOW_NEW_DUMMY_CARD, {column_id, card_name}));
+}

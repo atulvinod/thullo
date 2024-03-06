@@ -15,6 +15,7 @@ import * as _ from "lodash";
 import { MoonLoader as Loader } from "react-spinners";
 import { useSelector } from "react-redux";
 import { getCardBeingProcessed } from "../../../store/board";
+import { store } from "../../../store";
 
 export const KanbanBoardCard = ({ cardData, columnData }) => {
     const [showCardDetailModal, setShowCardDetailModal] = useState(false);
@@ -26,6 +27,9 @@ export const KanbanBoardCard = ({ cardData, columnData }) => {
             isDragging: !!monitor.isDragging(),
         }),
         item: { cardId: cardData.card_id, fromColumn: columnData.column_id },
+        canDrag: (monitor) =>
+            store?.getState().board.currentCardBeingProcessed !=
+            cardData.card_id,
     }));
 
     return (

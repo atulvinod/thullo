@@ -8,13 +8,13 @@ import { Button, ButtonTypes } from "../../button/button.component";
 import { PencilVector } from "../../../vectors/components/pencil.vector";
 import { updateBoardDescription } from "../../../services/board.services";
 import { BaseCardDetailContainer } from "../base-card-detail-container/base-card-detail-container.component";
-import { useXHR } from "../../../hooks/xhr.hooks";
+import { useGlobalLoader } from "../../../hooks/xhr.hooks";
 
 export const Description = ({ description, ...props }) => {
     const currentBoard = useSelector(getCurrentBoard);
     const [isEditMode, setEditMode] = useState(false);
     const refreshBoard = useRefreshBoard();
-    const xhr = useXHR();
+    const showGlobalLoader = useGlobalLoader();
 
     return (
         <BaseCardDetailContainer
@@ -32,16 +32,16 @@ export const Description = ({ description, ...props }) => {
                         description: currentBoard.description,
                     }}
                     onSubmit={async (values, { isSubmitting }) => {
-                       try {
-                           await xhr(() =>
-                               updateBoardDescription(
-                                   currentBoard.board_id,
-                                   values.description
-                               )
-                           );
-                           refreshBoard();
-                           setEditMode(false);
-                       } catch (error) {}
+                        try {
+                            await showGlobalLoader(() =>
+                                updateBoardDescription(
+                                    currentBoard.board_id,
+                                    values.description
+                                )
+                            );
+                            refreshBoard();
+                            setEditMode(false);
+                        } catch (error) {}
                     }}
                 >
                     {({

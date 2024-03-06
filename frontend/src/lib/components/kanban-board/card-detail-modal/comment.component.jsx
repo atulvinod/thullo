@@ -3,7 +3,7 @@ import { currentUserSelector } from "../../../store";
 import { Button, ButtonTypes } from "../../button/button.component";
 import { ProfileImage } from "../../profile-image/profile-image.component";
 import * as moment from "moment";
-import { useXHR } from "../../../hooks/xhr.hooks";
+import { useGlobalLoader } from "../../../hooks/xhr.hooks";
 import { deleteComment, updateComment } from "../../../services/board.services";
 import { getCurrentBoard } from "../../../store/board";
 import { useRefreshBoard } from "../hooks/use-refresh-board.hook";
@@ -15,11 +15,11 @@ export const Comment = ({ card_id, comment, ...props }) => {
     const currentBoard = useSelector(getCurrentBoard);
     const refreshBoard = useRefreshBoard();
     const [isEditMode, setIsEditMode] = useState(false);
-    const xhr = useXHR();
+    const showGlobalLoader = useGlobalLoader();
 
     const handleDelete = async () => {
         try {
-            await xhr(
+            await showGlobalLoader(
                 () => deleteComment(currentBoard.board_id, card_id, comment.id),
                 "Comment deleted"
             );
@@ -70,7 +70,7 @@ export const Comment = ({ card_id, comment, ...props }) => {
                         }}
                         onSubmit={async (values) => {
                             try {
-                                await xhr(() =>
+                                await showGlobalLoader(() =>
                                     updateComment(
                                         currentBoard.board_id,
                                         card_id,

@@ -1,12 +1,15 @@
 import { findInArray } from "../../utils/common.util";
 import { BOARD_ACTION_TYPES } from "./board.types";
+import { constants, transformationConfigs } from "../../utils/constants";
+import * as _ from "lodash";
 
 export const INITIAL_STATE = {
     currentHoverColumn: null,
     allBoards: [],
     isLoading: true,
     currentBoard: null,
-    currentCardBeingProcessed: null
+    currentCardBeingProcessed: null,
+    transformations: {}
 }
 
 export const boardReducer = (state = INITIAL_STATE, payload = {}) => {
@@ -36,7 +39,8 @@ export const boardReducer = (state = INITIAL_STATE, payload = {}) => {
                 ...state,
                 currentBoard: action,
                 isLoading: false,
-                currentCardBeingProcessed: null
+                currentCardBeingProcessed: null,
+                transformations: {}
             }
         }
         case BOARD_ACTION_TYPES.SET_CARD_BEING_PROCESSED: {
@@ -83,6 +87,38 @@ export const boardReducer = (state = INITIAL_STATE, payload = {}) => {
                 currentCardBeingProcessed: -1
             }
         }
+
+        case BOARD_ACTION_TYPES.SET_COLUMN_TRANSFORMATION:
+            /**
+             * column_name : number
+             * transformation_basis: date
+             * transformation_type: sort | filter
+             * transformation_config : recently_added_desc
+             */
+            const { column_id, transformation_type, transformation_basis, transformation_config } = action;
+
+            const newState = { ...state };
+            if (!(column_id in newState.transformations)) {
+                newState.transformations[column_id] = { [transformationConfigs.TYPES.FILTER]: {}, [transformationConfigs.TYPES.SORT]: {} }
+            }
+
+            newState.transformations[column_id][transformation_type][transformation_basis] = transformation_config;
+
+            const columnIndex = findInArray(newState.currentBoard.columns, (obj) => obj.column_id === column_id)
+
+            let columnCards = newState.currentBoard.columns[columnIndex].cards;
+
+            const sortingFunctions = []
+            for (const [basis, config] of Object.entries(newState.transformations[column_id][transformationConfigs.TYPES.SORT])) {
+                sortingFunctions.push(transformationConfigs.CONFIG_DEF.SORT[basis][config])
+            }
+
+            for (const sortFunc of sortingFunctions) {
+                columnCards.sort(sortFunc)
+            }
+
+            newState.currentBoard.columns[columnIndex].cards = columnCards;
+            return { ...state, currentBoard: { ...newState.currentBoard } }
         default:
             return state;
 

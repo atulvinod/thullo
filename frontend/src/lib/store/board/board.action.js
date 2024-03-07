@@ -30,3 +30,7 @@ export const moveCardBetweenColumn = (card_id, from_column, to_column) => async 
 export const showDummyNewCard = (column_id, card_name) => (dispatch) =>{
     dispatch(createAction(BOARD_ACTION_TYPES.SHOW_NEW_DUMMY_CARD, {column_id, card_name}));
 }
+
+export const setColumnTransformation = (column_id, transformation_type, transformation_basis, transformation_config) => (dispatch) => {
+    dispatch(createAction(BOARD_ACTION_TYPES.SET_COLUMN_TRANSFORMATION, { column_id, transformation_type, transformation_basis, transformation_config }))
+}

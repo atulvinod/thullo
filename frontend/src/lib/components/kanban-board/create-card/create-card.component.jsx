@@ -8,7 +8,7 @@ export const CreateCard = ({
     index,
     boardId,
     columnId,
-    deleteCard,
+    onClose,
 }) => {
     return (
         <div className="create-card-component">
@@ -51,7 +51,7 @@ export const CreateCard = ({
                             />
                             <Button
                                 buttonType={ButtonTypes.NOBG}
-                                onClick={deleteCard}
+                                onClick={onClose}
                                 label={"Cancel"}
                             />
                         </div>

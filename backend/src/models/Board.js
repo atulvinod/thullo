@@ -190,6 +190,8 @@ class Board extends Base {
                 'id as card_id',
                 'card_name',
                 'cover_image_url',
+                'created',
+                'modified',
             ]).where('column_id', column_id)
             .orderBy('column_order');
 
@@ -204,6 +206,8 @@ class Board extends Base {
                 card_members: [],
                 card_attachments: [],
                 card_comments: [],
+                created: card.created,
+                modified: card.modified,
             };
             const label_query = this.getSlaveDatabase()
                 .table(CARD_LABELS)

@@ -11,6 +11,7 @@ import { useRefreshBoard } from "../hooks/use-refresh-board.hook";
 import { TagRow } from "../../tag-row/tag-row.component";
 import { LabelVector } from "../../../vectors/components/label.vector";
 import { useGlobalLoader } from "../../../hooks/xhr.hooks";
+import { Check } from "lucide-react";
 
 export const AddLabel = ({ cardDetail }) => {
     const currentBoard = useSelector(getCurrentBoard);
@@ -80,14 +81,30 @@ export const AddLabel = ({ cardDetail }) => {
                 {colors.map((color) => (
                     <div
                         key={color}
-                        onClick={() => setSelectedColor(color)}
+                        onClick={() =>
+                            !selectedColor
+                                ? setSelectedColor(color)
+                                : setSelectedColor(null)
+                        }
                         style={{
                             backgroundColor: color,
+                            height: "3.5rem",
+                            borderRadius: "1rem",
                         }}
-                        className={`label-input-labels ${
-                            selectedColor == color ? "label-selected" : ""
-                        }`}
-                    ></div>
+                        className={
+                            "d-flex d-justify-content-center d-align-items-center "
+                        }
+                    >
+                        {selectedColor == color && (
+                            <div>
+                                <Check
+                                    style={{
+                                        margin: "0 auto",
+                                    }}
+                                />
+                            </div>
+                        )}
+                    </div>
                 ))}
             </div>
             {cardDetail.card_labels?.length ? (

@@ -15,6 +15,7 @@ import { AddLabel } from "./add-label.component";
 import { AddCover } from "./add-cover.component";
 import { LabelVector } from "../../../vectors/components/label.vector";
 import { ProfileCircle } from "../../../vectors/components/profile-circle.vector";
+import { TagRow } from "../../tag-row/tag-row.component";
 
 export const CardDetailModal = ({
     setModalIsOpen,
@@ -71,6 +72,9 @@ export const CardDetailModal = ({
                                     {columnDetail.column_name}
                                 </span>
                             </p>
+                            <div className={"mt-10"}>
+                                <TagRow tags={cardDetail.card_labels} />
+                            </div>
                         </div>
                         <div className="mt-24">
                             <Description description={cardDetail.description} />
@@ -93,6 +97,7 @@ export const CardDetailModal = ({
                             <div className="mt-20">
                                 <AddCover cardDetail={cardDetail} />
                                 <AddLabel cardDetail={cardDetail} />
+                                <div className="mt-10"></div>
                             </div>
                         </div>
                         <div className="card-detail-members mt-20">

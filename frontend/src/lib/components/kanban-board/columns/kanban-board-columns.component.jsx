@@ -301,6 +301,7 @@ export const KanbanBoardColumns = ({
                                         column_id,
                                     }) => {
                                         try {
+                                            handleDeleteCard(index);
                                             dispatch(
                                                 showDummyNewCard(
                                                     column_id,
@@ -314,7 +315,6 @@ export const KanbanBoardColumns = ({
                                                     card_name
                                                 )
                                             );
-                                            handleDeleteCard(index);
                                             refreshBoard();
                                         } catch (error) {}
                                     }}

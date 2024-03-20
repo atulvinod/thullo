@@ -4,7 +4,7 @@ import tinycolor from "tinycolor2";
 export const Tag = ({ tagColor, tagText }) => {
     const textColor = (tagColor) => {
         const color = tinycolor(tagColor);
-        return color.lighten(25).toString();
+        return color.lighten(100).toString();
     };
     return (
         <div className="tag" style={{ backgroundColor: tagColor }}>

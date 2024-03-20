@@ -119,6 +119,16 @@ export const boardReducer = (state = INITIAL_STATE, payload = {}) => {
 
             newState.currentBoard.columns[columnIndex].cards = columnCards;
             return { ...state, currentBoard: { ...newState.currentBoard } }
+
+        case BOARD_ACTION_TYPES.DELETE_CARD: {
+            const newState = { ...state }
+            const { column_id, card_id } = action;
+            const columnIndex = findInArray(newState.currentBoard.columns, (obj) => obj.column_id === column_id)
+            let columnCards = newState.currentBoard.columns[columnIndex].cards;
+            newState.currentBoard.columns[columnIndex].cards = columnCards.filter((c) => c.card_id !== card_id)
+            return { ...state, currentBoard: { ...newState.currentBoard } };
+        }
+
         default:
             return state;
 

@@ -34,3 +34,7 @@ export const showDummyNewCard = (column_id, card_name) => (dispatch) =>{
 export const setColumnTransformation = (column_id, transformation_type, transformation_basis, transformation_config) => (dispatch) => {
     dispatch(createAction(BOARD_ACTION_TYPES.SET_COLUMN_TRANSFORMATION, { column_id, transformation_type, transformation_basis, transformation_config }))
 }
+
+export const deleteCard = (column_id, card_id) => (dispatch) => {
+    dispatch(createAction(BOARD_ACTION_TYPES.DELETE_CARD, { card_id, column_id }))
+}

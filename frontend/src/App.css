@@ -175,6 +175,10 @@
     margin-right: 1.5rem;
 }
 
+.mt-full{
+    margin-top: 100%;
+}
+
 form .form-input-container {
     margin-top: 2.5rem;
 }

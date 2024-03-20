@@ -106,3 +106,7 @@ export const deleteComment = async (board_id, card_id, comment_id) => {
 export const updateComment = async (board_id, card_id, comment_id, comment) => {
     await client.patch(`/boards/${board_id}/card/${card_id}/comments/${comment_id}`, { comment });
 }
+
+export const deleteCardRequest = async (board_id, card_id,) => {
+    await client.delete(`/boards/${board_id}/card/${card_id}`)
+}

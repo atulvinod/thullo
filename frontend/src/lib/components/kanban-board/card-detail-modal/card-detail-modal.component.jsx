@@ -10,12 +10,16 @@ import { ProfileImage } from "../../profile-image/profile-image.component";
 import { CommentsSection } from "./comments-section.component";
 import { AssignUsersToCard } from "../card/assign-users.component";
 import { Attachments } from "./attachments.component";
-import { KanbanActionPopup } from "../action-popup/action-popup.component";
 import { AddLabel } from "./add-label.component";
 import { AddCover } from "./add-cover.component";
 import { LabelVector } from "../../../vectors/components/label.vector";
 import { ProfileCircle } from "../../../vectors/components/profile-circle.vector";
 import { TagRow } from "../../tag-row/tag-row.component";
+import { currentUserSelector } from "../../../store";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteCard, getCurrentBoard } from "../../../store/board";
+import { deleteCardRequest } from "../../../services/board.services";
+import { toast } from "react-toastify";
 
 export const CardDetailModal = ({
     setModalIsOpen,
@@ -23,6 +27,32 @@ export const CardDetailModal = ({
     cardDetail,
     columnDetail,
 }) => {
+    const user = useSelector(currentUserSelector);
+    const currentBoard = useSelector(getCurrentBoard);
+    const dispatch = useDispatch();
+
+    const deleteCurrentCard = async () => {
+        try {
+            const confirm = window.confirm(
+                "Are you sure you want to delete this card?"
+            );
+            if (confirm) {
+                toast.info("Deleting card");
+                await deleteCardRequest(
+                    currentBoard.board_id,
+                    cardDetail.card_id
+                );
+                dispatch(
+                    deleteCard(columnDetail.column_id, cardDetail.card_id)
+                );
+                setModalIsOpen(false);
+                toast.success("Card deleted");
+            }
+        } catch (e) {
+            toast.error("Failed to delete the card");
+        }
+    };
+
     return (
         <Modal
             isOpen={isModalOpen}
@@ -133,6 +163,18 @@ export const CardDetailModal = ({
                                 }
                             />
                         </div>
+                        {currentBoard.created_by_user_id === user.id && (
+                            <div className="mt-full">
+                                <Button
+                                    onClick={deleteCurrentCard}
+                                    label={"Delete card"}
+                                    buttonType={ButtonTypes.DANGER_OUTLINE}
+                                    buttonClasses={
+                                        "w-100 d-justify-content-center"
+                                    }
+                                />
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

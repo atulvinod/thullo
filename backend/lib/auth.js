@@ -2,10 +2,10 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const passport = require('./passport');
 
-function generateJWT(user_id, email) {
-    const payload = { user_id, email };
+function generateJWT(data, type, expiresIn) {
+    const payload = { ...data, type };
     const token = jwt.sign(payload, process.env.JWT_AUTH_OPTIONS__SECRET_OR_KEY, {
-        expiresIn: process.env.JWT_AUTH_OPTIONS__EXPIRY,
+        expiresIn: expiresIn || process.env.JWT_AUTH_OPTIONS__EXPIRY,
         issuer: process.env.JWT_AUTH_OPTIONS__ISSUER,
         audience: process.env.JWT_AUTH_OPTIONS__AUDIENCE,
     });
@@ -25,9 +25,14 @@ function authenticate(req, res, next) {
     return passport.authenticate('jwt', { session: false })(req, res, next);
 }
 
+function validateToken(token) {
+    return jwt.verify(token, process.env.JWT_AUTH_OPTIONS__SECRET_OR_KEY);
+}
+
 module.exports = {
     authenticate,
     generateJWT,
     generatePasswordHash,
     comparePassword,
+    validateToken,
 };

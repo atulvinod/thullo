@@ -23,6 +23,8 @@ ARG firebase_project_id='thullo-d8d98'
 ARG firebase_storage_bucket='thullo-d8d98.appspot.com'
 ARG firebase_message_sender_id='169922888993'
 ARG firebase_config_api_id='1:169922888993:web:96608c54da8769eb90ea60'
+ARG resend_api_key=""
+ARG app_host=""
 
 # Necessary environment variables
 ENV LOG_SETTINGS__PATH=/app/backend/logs
@@ -47,6 +49,8 @@ ENV FIREBASE_CONFIG__PROJECT_ID=${firebase_project_id}
 ENV FIREBASE_CONFIG__STORAGE_BUCKET=${firebase_storage_bucket}
 ENV FIREBASE_CONFIG__MESSAGE_SENDER_ID=${firebase_message_sender_id}
 ENV FIREBASE_CONFIG__API_ID=${firebase_config_api_id}
+ENV RESEND_API_KEY=${resend_api_key}
+ENV APP_HOST=${app_host}
 
 RUN mkdir /app
 RUN mkdir /app/backend

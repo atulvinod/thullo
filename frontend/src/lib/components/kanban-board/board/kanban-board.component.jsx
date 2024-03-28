@@ -28,6 +28,7 @@ import { KanbanActionPopup } from "../action-popup/action-popup.component";
 import { BoardVisibilityPopup } from "../board-visibility-popup/board-visibility.component";
 import { ToastContainer } from "react-toastify";
 import { useGlobalLoader } from "../../../hooks/xhr.hooks";
+import AppLoader from "../../app-loader/app-loader";
 
 export const KanbanBoard = () => {
     const isLoading = useSelector(getBoardsIsLoading);
@@ -75,7 +76,7 @@ export const KanbanBoard = () => {
         <div className=" h-100">
             {isLoading ? (
                 <div className="d-flex d-justify-content-center d-align-items-center h-100">
-                    <Loader size={80} />
+                    <AppLoader />
                 </div>
             ) : (
                 <div className="kanban-board-container">

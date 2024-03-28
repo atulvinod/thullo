@@ -1,11 +1,9 @@
 const { Knex } = require('knex');
-
 function appendCommonColumns(knex, table) {
     table.dateTime('created').defaultTo(knex.fn.now());
     table.dateTime('modified').defaultTo(knex.fn.now());
     table.increments('id', { primaryKey: true }).notNullable();
 }
-
 /**
  *
  * @param {Knex} knex

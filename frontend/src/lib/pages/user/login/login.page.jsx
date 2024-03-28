@@ -13,6 +13,8 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
 import { MoonLoader as Loader } from "react-spinners";
+import { Link } from "react-router-dom";
+import { validateEmail } from "../../../utils/common.util";
 
 export const LoginPage = () => {
     const dispatch = useDispatch();
@@ -37,11 +39,7 @@ export const LoginPage = () => {
                         const errors = {};
                         if (!values.email) {
                             errors.email = "Required";
-                        } else if (
-                            !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
-                                values.email
-                            )
-                        ) {
+                        } else if (!validateEmail(values.email)) {
                             errors.email = "Invalid Email Address";
                         }
 
@@ -51,7 +49,6 @@ export const LoginPage = () => {
                         return errors;
                     }}
                     onSubmit={(values, { setSubmitting }) => {
-                        console.log(values);
                         dispatch(
                             loginUserAction({
                                 email: values.email,
@@ -108,9 +105,15 @@ export const LoginPage = () => {
                             ) : (
                                 ""
                             )}
+                            <div className="mt-10">
+                                <Link to="/forgot-password">
+                                    Forgot your password?
+                                </Link>
+                            </div>
+
                             <div className="user-button-container">
                                 <Button label={"Login"} type={"submit"} />
-                                <Loader loading={isLoading} />
+                                <Loader loading={isLoading} size={22} />
                             </div>
                         </form>
                     )}

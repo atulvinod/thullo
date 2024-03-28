@@ -13,6 +13,7 @@ import {
 import { BoardCard } from "../../components/board-card/board-card.component";
 import { MoonLoader as Loader } from "react-spinners";
 import { PlusVector } from "../../vectors/components/plus.vector";
+import AppLoader from "../../components/app-loader/app-loader";
 
 const AllBoardsPage = () => {
     const [isModalOpen, setModalIsOpen] = useState(false);
@@ -39,7 +40,7 @@ const AllBoardsPage = () => {
                 </div>
                 {isLoading ? (
                     <div className="d-flex d-justify-content-center w-100 d-align-items-center all-boards-loader-container">
-                        <Loader isLoading={isLoading} size={90} />
+                        <AppLoader />
                     </div>
                 ) : (
                     <div className="all-boards-cards-container">

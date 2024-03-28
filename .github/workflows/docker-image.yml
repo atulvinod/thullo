@@ -41,4 +41,6 @@ jobs:
             db_port=${{secrets.DB__CONNECTIONS__MASTER__PORT}}
             db_client=${{secrets.DATABASE_CLIENT}}
             db_database=${{secrets.DB__CONNECTIONS__MASTER__DATABASE}}
+            resend_api_key=${{secrets.RESEND_API_KEY}}
+            app_host=${{secrets.APP_HOST}}
             

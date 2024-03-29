@@ -136,7 +136,7 @@ export const RegisterPage = () => {
                             {registerError &&
                             registerError instanceof AxiosError ? (
                                 <p className="user-error">
-                                    {registerError.response.data}
+                                    {registerError.response.data.error}
                                 </p>
                             ) : (
                                 ""

@@ -167,6 +167,8 @@ function handleHTTPError(error, req, res, next) {
         // Not sending response since it has already been sent
         if (res.headersSent) {
             next(error);
+        } else if (error instanceof RequestError) {
+            res.status(status).json({ error: result });
         } else {
             res.status(status).send(result);
         }

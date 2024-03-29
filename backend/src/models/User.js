@@ -127,7 +127,7 @@ class User extends Base {
                 <div>
                     <h1> Hello! </h1>
                     <span> Click on this link to reset your password</span><br>
-                    <a href="${process.env.APP_HOST}/#/change-password?token=${token}">Change your password</a>
+                    <a href="${process.env.APP_HOST}#/change-password?token=${token}&email=${email}">Change your password</a>
                 </div>
             `,
         });
@@ -199,8 +199,10 @@ class User extends Base {
                 .update({ is_used: true })
                 .where({ id: db_token.id });
         } catch (error) {
-            console.log(error);
-            throw error;
+            if (!(error instanceof RequestError)) {
+                throw new RequestError(error.message ?? 'Unexpected error occurred');
+            }
+            throw new RequestError('Unexpected error occurred');
         }
     }
 }

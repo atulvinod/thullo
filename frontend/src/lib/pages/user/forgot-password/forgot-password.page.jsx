@@ -76,7 +76,7 @@ export default function ForgotPasswordPage() {
                             />
                             {error && error instanceof AxiosError ? (
                                 <p className="user-error">
-                                    {error.response.data}
+                                    {error.response.data.error}
                                 </p>
                             ) : (
                                 ""

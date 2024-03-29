@@ -10,7 +10,7 @@ import {
     tokenSelector,
 } from "../../../store";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { AxiosError } from "axios";
 import { MoonLoader as Loader } from "react-spinners";
 import { Link } from "react-router-dom";
@@ -22,7 +22,7 @@ export const LoginPage = () => {
     const loginError = useSelector(loginErrorSelector);
     const isLoading = useSelector(loadingSelector);
     const navigate = useNavigate();
-
+    const [searchParams] = useSearchParams();
     useEffect(() => {
         if (token && token.length) {
             navigate("/");
@@ -34,7 +34,10 @@ export const LoginPage = () => {
             <div className="user-form-container">
                 <h1>Login</h1>
                 <Formik
-                    initialValues={{ email: "", password: "" }}
+                    initialValues={{
+                        email: searchParams.get("email"),
+                        password: "",
+                    }}
                     validate={(values) => {
                         const errors = {};
                         if (!values.email) {
@@ -100,7 +103,7 @@ export const LoginPage = () => {
                             />
                             {loginError && loginError instanceof AxiosError ? (
                                 <p className="user-error">
-                                    {loginError.response.data}
+                                    {loginError.response.data.error}
                                 </p>
                             ) : (
                                 ""

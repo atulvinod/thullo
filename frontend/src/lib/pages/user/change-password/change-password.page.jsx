@@ -6,11 +6,13 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { resetPasswordRequest } from "../../../services/user.services";
 import { AxiosError } from "axios";
+import { MoonLoader as Loader } from "react-spinners";
 
 export default function ChangePasswordPage() {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const token = searchParams.get("token");
+    const email = searchParams.get("email");
     const [isLoading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -25,9 +27,13 @@ export default function ChangePasswordPage() {
         try {
             setLoading(true);
             await resetPasswordRequest(token, password);
-            alert("Your password has been changed");
+            alert(
+                "Your password has been changed, you will be navigated to the login page in 2 seconds."
+            );
+            setTimeout(() => {
+                navigate(`/login?email=${email}`);
+            }, 200);
         } catch (e) {
-            console.log(e);
             setError(e);
         } finally {
             setLoading(false);
@@ -91,6 +97,7 @@ export default function ChangePasswordPage() {
                                     label={"Reset your password"}
                                     type="submit"
                                 />
+                                <Loader loading={isLoading} size={22} />
                             </div>
                         </form>
                     )}

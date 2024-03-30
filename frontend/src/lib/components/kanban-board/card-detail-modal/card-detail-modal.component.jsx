@@ -18,7 +18,10 @@ import { TagRow } from "../../tag-row/tag-row.component";
 import { currentUserSelector } from "../../../store";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteCard, getCurrentBoard } from "../../../store/board";
-import { deleteCardRequest } from "../../../services/board.services";
+import {
+    addCoverToCard,
+    deleteCardRequest,
+} from "../../../services/board.services";
 import { toast } from "react-toastify";
 
 export const CardDetailModal = ({
@@ -125,7 +128,16 @@ export const CardDetailModal = ({
                                 }
                             />
                             <div className="mt-20">
-                                <AddCover cardDetail={cardDetail} />
+                                <AddCover
+                                    cardDetail={cardDetail}
+                                    addCover={(cover_image_url) =>
+                                        addCoverToCard(
+                                            currentBoard.board_id,
+                                            cardDetail.card_id,
+                                            cover_image_url
+                                        )
+                                    }
+                                />
                                 <AddLabel cardDetail={cardDetail} />
                                 <div className="mt-10"></div>
                             </div>

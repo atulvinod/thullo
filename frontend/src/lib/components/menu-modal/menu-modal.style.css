@@ -14,3 +14,19 @@
     border-bottom: 1px solid #E0e0e0;
     padding-bottom: 0.8rem;
 }
+
+.menu-modal-board-background {
+    height: 25rem;
+    width: 100%;
+    border:1px solid lightgray;
+    border-radius: 10px;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.menu-modal-board-background img{
+    width: 100%;
+}

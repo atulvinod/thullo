@@ -1,16 +1,8 @@
-import { useEffect, useState } from "react";
 import { CloseVector } from "../../vectors/components/close.vector";
 import { Button, ButtonTypes } from "../button/button.component";
 import { InfoLabel } from "../info-label/info-label.component";
 import { ProfileImage } from "../profile-image/profile-image.component";
-import "./menu-modal.style.css";
-import Modal from "react-modal";
-import { PencilVector } from "../../vectors/components/pencil.vector";
-import { Formik } from "formik";
-import {
-    deleteBoardMember,
-    updateBoardDescription,
-} from "../../services/board.services";
+import { deleteBoardMember } from "../../services/board.services";
 import { useRefreshBoard } from "../kanban-board/hooks/use-refresh-board.hook";
 import { Description } from "../kanban-board/description/description.component";
 import { useSelector } from "react-redux";
@@ -19,6 +11,7 @@ import moment from "moment";
 import { ProfileCircle } from "../../vectors/components/profile-circle.vector";
 import { DocumentVector } from "../../vectors/components/document.vector";
 import { useGlobalLoader } from "../../hooks/xhr.hooks";
+import "./menu-modal.style.css";
 
 export const MenuModal = ({
     setModalIsOpen,
@@ -35,17 +28,23 @@ export const MenuModal = ({
                 <div className="menu-modal-container">
                     <div className="menu-modal-header d-flex d-justify-content-space-between d-align-items-center">
                         <span>Menu</span>
+
                         <Button
                             onClick={() => setModalIsOpen(false)}
                             buttonType={ButtonTypes.NOBG}
                             icon={
-                                <CloseVector
-                                    className="
-    button-icon"
-                                ></CloseVector>
+                                <CloseVector className="button-icon"></CloseVector>
                             }
                         />
                     </div>
+                    <div className="menu-modal-board-background">
+                        {currentBoard.cover_url ? (
+                            <img src={currentBoard.cover_url} />
+                        ) : (
+                            <span>No background image</span>
+                        )}
+                    </div>
+
                     <div className="mt-9">
                         <InfoLabel
                             labelText={"Made By"}

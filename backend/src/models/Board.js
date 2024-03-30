@@ -291,6 +291,7 @@ class Board extends Base {
                 'created_by_user_id',
                 'created as created_on',
                 'description',
+                'cover_url',
             ])
             .first();
 
@@ -328,6 +329,7 @@ class Board extends Base {
             description: board_data.description,
             columns: [],
             board_members,
+            cover_url: board_data.cover_url,
         };
         const columns = await this.#getBoardColumns(board_columns);
         result_obj.columns.push(...columns);

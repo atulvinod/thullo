@@ -12,7 +12,7 @@ import { getCurrentBoard } from "../../../store/board";
 import { PictureVector } from "../../../vectors/components/picture.vector";
 import { useGlobalLoader } from "../../../hooks/xhr.hooks";
 
-export const AddCover = ({ cardDetail }) => {
+export const AddCover = ({ cardDetail , addCover}) => {
     const [searchResults, setSearchResults] = useState([]);
     const refreshBoard = useRefreshBoard();
     const currentBoard = useSelector(getCurrentBoard);
@@ -31,11 +31,7 @@ export const AddCover = ({ cardDetail }) => {
 
     const handleOnResultClick = async (cover_image_url) => {
         await showGlobalLoader(() =>
-            addCoverToCard(
-                currentBoard.board_id,
-                cardDetail.card_id,
-                cover_image_url
-            )
+            addCover(cover_image_url)
         );
         refreshBoard();
     };

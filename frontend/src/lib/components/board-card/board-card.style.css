@@ -21,6 +21,12 @@
     outline: 1px solid #f2f2f2;
 }
 
+.board-image-container img {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+}
+
 .board-card-heading {
     font-size: 16px;
     font-style: normal;

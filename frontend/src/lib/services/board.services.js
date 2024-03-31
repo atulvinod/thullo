@@ -49,6 +49,10 @@ export const deleteBoardMember = async (board_id, member_id) => {
     await client.delete(`/boards/${board_id}/members/${member_id}`);
 }
 
+export const updateBoardCover = async (board_id, cover_url) => {
+    await client.patch(`/boards/${board_id}/cover_url`, { cover_url })
+}
+
 export const updateBoardVisibility = async (board_id, is_private) => {
     await client.patch(`/boards/${board_id}/is_private`, { is_private })
 }

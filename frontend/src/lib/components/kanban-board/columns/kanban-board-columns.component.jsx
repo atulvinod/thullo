@@ -28,10 +28,10 @@ import {
 import { PlusVector } from "../../../vectors/components/plus.vector";
 import { CreateCard } from "../create-card/create-card.component";
 
-import { pullAt } from "lodash";
+import { pullAt, take } from "lodash";
 import { useRefreshBoard } from "../hooks/use-refresh-board.hook";
 import { useGlobalLoader } from "../../../hooks/xhr.hooks";
-import { Filter, GripHorizontal } from "lucide-react";
+import { Filter, ChevronDown, GalleryVertical, ChevronUp } from "lucide-react";
 import Dropdown from "react-dropdown";
 import "react-dropdown/style.css";
 import { transformationConfigs } from "../../../utils/constants";
@@ -59,6 +59,29 @@ const dateFilters = [
     },
 ];
 
+const limitFilters = [
+    {
+        label: "All",
+        value: Number.MAX_SAFE_INTEGER,
+    },
+    {
+        label: "Top 5",
+        value: 5,
+    },
+    {
+        label: "Top 10",
+        value: 10,
+    },
+    {
+        label: "Top 20",
+        value: 20,
+    },
+    {
+        label: "Top 30",
+        value: 30,
+    },
+];
+
 export const KanbanBoardColumns = ({
     boardId,
     columnId,
@@ -75,6 +98,7 @@ export const KanbanBoardColumns = ({
     const [showFilter, setShowFilter] = useState(false);
     const refreshBoard = useRefreshBoard();
     const showGlobalLoader = useGlobalLoader();
+    const [filteredCards, setFilteredCards] = useState(columnData.cards);
 
     const [{ isOver }, drop] = useDrop(() => ({
         accept: DragItemTypes.CARD,
@@ -161,7 +185,9 @@ export const KanbanBoardColumns = ({
                 container.style.overflow = "hidden";
             } else {
                 setTimeout(() => {
-                    container.style.overflow = "visible";
+                    if (container.style.overflow == "hidden") {
+                        container.style.overflow = "visible";
+                    }
                 }, 500);
             }
         }
@@ -171,55 +197,87 @@ export const KanbanBoardColumns = ({
         <div ref={drop} className="h-100">
             <div className="mb-14 sticky-top">
                 <div
-                    className="d-flex d-justify-content-space-between d-align-items-center column-header"
+                    className=" column-header"
                     onClick={() => {
                         setColumnFilterContainerHeight();
                         setShowFilter(!showFilter);
                     }}
                 >
-                    <h3 className="text-xl">{columnData.column_name}</h3>
-                    <div>
-                        <Popup
-                            trigger={
-                                <span>
-                                    <MoreHorizVector className="more-button" />
-                                </span>
-                            }
-                            position={"bottom left"}
-                            closeOnDocumentClick
-                            on={"hover"}
-                            mouseLeaveDelay={0}
-                            mouseEnterDelay={0}
-                            contentStyle={{ padding: "0px", border: "none" }}
-                            arrow={false}
-                        >
-                            <div className="column-popup-menu">
-                                <ul>
-                                    <li
-                                        onClick={() =>
-                                            setShowCreateColumnModal(true)
-                                        }
-                                    >
-                                        Rename
-                                    </li>
-                                    <li
-                                        onClick={async () => {
-                                            try {
-                                                await showGlobalLoader(() =>
-                                                    deleteColumn(
-                                                        boardId,
-                                                        columnData.column_id
-                                                    )
-                                                );
-                                                refreshBoard();
-                                            } catch (error) {}
-                                        }}
-                                    >
-                                        Delete this list
-                                    </li>
-                                </ul>
-                            </div>
-                        </Popup>
+                    <div className="d-flex d-justify-content-space-between d-align-items-center w-100">
+                        <h3 className="text-xl">{columnData.column_name} </h3>
+                        <div className="d-flex d-align-items-center">
+                            <Popup
+                                trigger={
+                                    <span>
+                                        <MoreHorizVector className="more-button" />
+                                    </span>
+                                }
+                                position={"bottom left"}
+                                closeOnDocumentClick
+                                on={"hover"}
+                                mouseLeaveDelay={0}
+                                mouseEnterDelay={0}
+                                contentStyle={{
+                                    padding: "0px",
+                                    border: "none",
+                                }}
+                                arrow={false}
+                            >
+                                <div className="column-popup-menu">
+                                    <ul>
+                                        <li
+                                            onClick={() =>
+                                                setShowCreateColumnModal(true)
+                                            }
+                                        >
+                                            Rename
+                                        </li>
+                                        <li
+                                            onClick={async () => {
+                                                try {
+                                                    await showGlobalLoader(() =>
+                                                        deleteColumn(
+                                                            boardId,
+                                                            columnData.column_id
+                                                        )
+                                                    );
+                                                    refreshBoard();
+                                                } catch (error) {}
+                                            }}
+                                        >
+                                            Delete this list
+                                        </li>
+                                    </ul>
+                                </div>
+                            </Popup>
+                        </div>
+                    </div>
+                    <div className="mt-10 d-flex d-justify-content-space-between">
+                        <span className="d-flex d-align-items-center">
+                            <GalleryVertical
+                                size={12}
+                                className="text-color-darkgrey"
+                            />
+                            <span className="ml-5 text-color-darkgrey">
+                                {filteredCards.length}
+                                {filteredCards.length !=
+                                    columnData.cards.length &&
+                                    ` | ${columnData.cards.length}`}
+                            </span>
+                        </span>
+                        {showFilter ? (
+                            <ChevronUp
+                                size={20}
+                                style={{ marginLeft: "5px" }}
+                                className="text-color-darkgrey"
+                            />
+                        ) : (
+                            <ChevronDown
+                                size={20}
+                                style={{ marginLeft: "5px" }}
+                                className="text-color-darkgrey"
+                            />
+                        )}
                     </div>
                 </div>
                 <div
@@ -258,6 +316,18 @@ export const KanbanBoardColumns = ({
                                     placeholder="Select an option"
                                 />
                             </div>
+                            <div className="mt-13">
+                                <span>Show only</span>
+                                <Dropdown
+                                    options={limitFilters}
+                                    value={limitFilters[0]}
+                                    onChange={(obj) => {
+                                        setFilteredCards(
+                                            take(columnData.cards, obj.value)
+                                        );
+                                    }}
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -268,7 +338,7 @@ export const KanbanBoardColumns = ({
                     isCardHoverOnCurrentColumn() ? "column-highlight" : ""
                 }`}
             >
-                {columnData.cards.map((data) => (
+                {filteredCards.map((data) => (
                     <KanbanBoardCard
                         cardData={data}
                         columnData={columnData}

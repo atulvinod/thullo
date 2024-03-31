@@ -6,16 +6,12 @@ import { FormInputWithAction } from "../../form-input-with-action/form-input-wit
 import { KanbanActionPopup } from "../action-popup/action-popup.component";
 import { debounce } from "lodash";
 import { useRefreshBoard } from "../hooks/use-refresh-board.hook";
-import { addCoverToCard } from "../../../services/board.services";
-import { useSelector } from "react-redux";
-import { getCurrentBoard } from "../../../store/board";
 import { PictureVector } from "../../../vectors/components/picture.vector";
 import { useGlobalLoader } from "../../../hooks/xhr.hooks";
 
-export const AddCover = ({ cardDetail , addCover}) => {
+export const UnsplashImageSelector = ({ selectImage }) => {
     const [searchResults, setSearchResults] = useState([]);
     const refreshBoard = useRefreshBoard();
-    const currentBoard = useSelector(getCurrentBoard);
     const showGlobalLoader = useGlobalLoader();
 
     const search = debounce((event) => {
@@ -24,15 +20,12 @@ export const AddCover = ({ cardDetail , addCover}) => {
             return;
         }
         searchPhoto(keyword).then((results) => {
-            console.log(results);
             setSearchResults(results);
         });
     }, 1000);
 
     const handleOnResultClick = async (cover_image_url) => {
-        await showGlobalLoader(() =>
-            addCover(cover_image_url)
-        );
+        await showGlobalLoader(() => selectImage(cover_image_url));
         refreshBoard();
     };
 
@@ -43,9 +36,8 @@ export const AddCover = ({ cardDetail , addCover}) => {
             trigger={
                 <span>
                     <Button
-                        label={"Cover"}
+                        label={"Select Image"}
                         buttonType={ButtonTypes.SECONDARY}
-                        buttonStyle={{ width: "100%" }}
                         icon={
                             <PictureVector className="info-label-icon icon-color-grey"></PictureVector>
                         }

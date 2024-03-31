@@ -160,6 +160,13 @@ router.patch('/:board_id/is_private', async (req, res, logger) => {
     return res.json({ message: 'Updated visibility' });
 });
 
+router.patch('/:board_id/cover_url', async (req, res, logger) => {
+    const boards = new Boards(logger);
+    const { cover_url } = req.body;
+    await boards.updateBoardImage(req.user.id, req.params.board_id, cover_url);
+    return res.json({ message: "Updated cover url" });
+})
+
 router.get('/:board_id/search_user', async (req, res, logger) => {
     const boards = new Boards(logger);
     const { query } = req.query;

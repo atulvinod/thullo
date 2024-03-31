@@ -11,7 +11,7 @@ import { CommentsSection } from "./comments-section.component";
 import { AssignUsersToCard } from "../card/assign-users.component";
 import { Attachments } from "./attachments.component";
 import { AddLabel } from "./add-label.component";
-import { AddCover } from "./add-cover.component";
+import { UnsplashImageSelector } from "./unsplash-image-selector.component";
 import { LabelVector } from "../../../vectors/components/label.vector";
 import { ProfileCircle } from "../../../vectors/components/profile-circle.vector";
 import { TagRow } from "../../tag-row/tag-row.component";
@@ -128,9 +128,8 @@ export const CardDetailModal = ({
                                 }
                             />
                             <div className="mt-20">
-                                <AddCover
-                                    cardDetail={cardDetail}
-                                    addCover={(cover_image_url) =>
+                                <UnsplashImageSelector
+                                    selectImage={(cover_image_url) =>
                                         addCoverToCard(
                                             currentBoard.board_id,
                                             cardDetail.card_id,

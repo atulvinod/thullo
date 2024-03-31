@@ -2,7 +2,10 @@ import { CloseVector } from "../../vectors/components/close.vector";
 import { Button, ButtonTypes } from "../button/button.component";
 import { InfoLabel } from "../info-label/info-label.component";
 import { ProfileImage } from "../profile-image/profile-image.component";
-import { deleteBoardMember } from "../../services/board.services";
+import {
+    deleteBoardMember,
+    updateBoardCover,
+} from "../../services/board.services";
 import { useRefreshBoard } from "../kanban-board/hooks/use-refresh-board.hook";
 import { Description } from "../kanban-board/description/description.component";
 import { useSelector } from "react-redux";
@@ -11,7 +14,9 @@ import moment from "moment";
 import { ProfileCircle } from "../../vectors/components/profile-circle.vector";
 import { DocumentVector } from "../../vectors/components/document.vector";
 import { useGlobalLoader } from "../../hooks/xhr.hooks";
+import { FileImage } from "lucide-react";
 import "./menu-modal.style.css";
+import { UnsplashImageSelector } from "../kanban-board/card-detail-modal/unsplash-image-selector.component";
 
 export const MenuModal = ({
     setModalIsOpen,
@@ -37,12 +42,32 @@ export const MenuModal = ({
                             }
                         />
                     </div>
-                    <div className="menu-modal-board-background">
-                        {currentBoard.cover_url ? (
-                            <img src={currentBoard.cover_url} />
-                        ) : (
-                            <span>No background image</span>
-                        )}
+
+                    <div className="mt-9">
+                        <InfoLabel
+                            labelText={"Board background"}
+                            icon={<FileImage className="info-label-icon" />}
+                        />
+                        <div className="menu-modal-board-background">
+                            {currentBoard.cover_url ? (
+                                <img src={currentBoard.cover_url} />
+                            ) : (
+                                <span>No background image</span>
+                            )}
+                        </div>
+                        <div className="mt-2">
+                            <UnsplashImageSelector
+                                selectImage={async (cover_url) => {
+                                    await showGlobalLoader(() => {
+                                        updateBoardCover(
+                                            currentBoard.board_id,
+                                            cover_url
+                                        );
+                                    });
+                                    refreshBoard();
+                                }}
+                            />
+                        </div>
                     </div>
 
                     <div className="mt-9">

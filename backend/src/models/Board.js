@@ -668,5 +668,17 @@ class Board extends Base {
         await Promise.all(delete_promises);
         await tx.commit();
     }
+
+    /**
+     * @param {Number} user_id,
+     * @param {Number} board_id,
+     * @param {String} cover_url,
+     */
+    async updateBoardImage(user_id, board_id, cover_url) {
+        await this.validateAdminPermission(board_id, user_id);
+        await this.getMasterDatabase()
+            .table(BOARDS_TABLE)
+            .update({ cover_url }).where({ id: board_id });
+    }
 }
 module.exports = Board;

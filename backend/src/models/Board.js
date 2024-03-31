@@ -32,6 +32,7 @@ class Board extends Base {
             'bt.id as board_id',
             'bt.board_title',
             'bt.cover_url',
+            'bt.is_private',
             'u.id as created_by_user_id',
             'u.image_url as created_by_user_image_url',
             'u.name as created_by_user_name',

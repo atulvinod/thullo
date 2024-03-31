@@ -2,9 +2,9 @@ import "./board-card.style.css";
 import { useNavigate } from "react-router-dom";
 import { ProfileImage } from "../profile-image/profile-image.component";
 import { useDispatch } from "react-redux";
-import { BOARD_ACTION_TYPES, fetchCurrentBoard } from "../../store/board";
-import { createAction } from "../../utils/reducer.utils";
+import { fetchCurrentBoard } from "../../store/board";
 import { take } from "lodash";
+import { Lock } from "lucide-react";
 
 export const BoardCard = ({ boardData }) => {
     const navigate = useNavigate();
@@ -26,7 +26,8 @@ export const BoardCard = ({ boardData }) => {
                 )}
             </div>
             <span className="my-12 board-card-heading">
-                {boardData.board_title}
+                {boardData.board_title}{" "}
+                {boardData.is_private && <Lock size={12} className="ml-5" />}
             </span>
             <div className="d-flex d-align-items-center">
                 {take(boardData.members, 3).map((member) => (

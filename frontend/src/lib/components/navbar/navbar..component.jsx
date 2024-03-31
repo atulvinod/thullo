@@ -1,20 +1,20 @@
 import "./navbar.style.css";
 import logo from "./Logo.svg";
-import { Link, json, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { NavUserProfile } from "../nav-user-profile/nav-user-profile.component";
 import { useSelector } from "react-redux";
 import { tokenSelector } from "../../store";
 import { getCurrentBoard } from "../../store/board";
 import { Button, ButtonTypes } from "../button/button.component";
-import { MenuVector } from "../../vectors/components/menu.vector";
 import { FormInputWithAction } from "../form-input-with-action/form-input-with-action.component";
 import { ProgressBar } from "../progress-bar/progress-bar.component";
 import { apiCallStateSelector } from "../../store/app";
-import { debounce, take } from "lodash";
+import { debounce } from "lodash";
 import { useGlobalLoader } from "../../hooks/xhr.hooks";
 import { searchBoards } from "../../services/board.services";
 import { useState } from "react";
 import { useComponentVisible } from "../../hooks/component-visible.hooks";
+import { Dice5 } from "lucide-react";
 
 export const NavBar = () => {
     const navigate = useNavigate();
@@ -57,7 +57,7 @@ export const NavBar = () => {
                                     onClick={() => navigate("/")}
                                     buttonStyle={{ marginLeft: "2rem" }}
                                     icon={
-                                        <MenuVector className="button-icon icon-color-grey" />
+                                        <Dice5 className="button-icon icon-color-grey" />
                                     }
                                 ></Button>
                             </div>

@@ -9,6 +9,7 @@ import { getCurrentBoard } from "../../../store/board";
 import { useRefreshBoard } from "../hooks/use-refresh-board.hook";
 import { LockVector } from "../../../vectors/components/lock.vector";
 import { useGlobalLoader } from "../../../hooks/xhr.hooks";
+import { Lock } from "lucide-react";
 
 export const BoardVisibilityPopup = ({ ...props }) => {
     const currentBoard = useSelector(getCurrentBoard);
@@ -22,9 +23,7 @@ export const BoardVisibilityPopup = ({ ...props }) => {
                 <span>
                     <Button
                         buttonType={ButtonTypes.SECONDARY}
-                        icon={
-                            <LockVector className="button-icon icon-color-grey" />
-                        }
+                        icon={<Lock className="button-icon " />}
                         label={
                             currentBoard.is_board_private ? "Private" : "Public"
                         }

@@ -39,7 +39,7 @@ export const NavBar = () => {
     }, 1000);
 
     return (
-        <div>
+        <>
             <nav className="nav-container">
                 <div className="d-flex d-align-items-center">
                     <Link to="/">
@@ -110,6 +110,6 @@ export const NavBar = () => {
                 </div>
             </nav>
             {isAPICallPending ? <ProgressBar /> : <></>}
-        </div>
+        </>
     );
 };

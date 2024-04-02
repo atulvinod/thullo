@@ -269,8 +269,8 @@ form .form-input-container {
 
 .sticky-top{
     position: sticky;
-    top: 0;
     z-index: 1;
+    top: 6.9rem;
 }
 
 .px-12{

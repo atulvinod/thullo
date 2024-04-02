@@ -7,7 +7,7 @@ export const AppRoot = () => {
     return (
         <>
             <NavBar />
-            <div className="body-container">
+            <div className="root-container">
                 <Outlet />
             </div>
             <ToastContainer />

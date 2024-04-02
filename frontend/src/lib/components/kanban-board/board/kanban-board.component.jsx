@@ -73,129 +73,142 @@ export const KanbanBoard = () => {
     }, [isLoading]);
 
     return (
-        <div className=" h-100">
+        <>
             {isLoading ? (
-                <div className="d-flex d-justify-content-center d-align-items-center h-100">
+                <div
+                    className="d-flex d-justify-content-center d-align-items-center h-100"
+                    style={{ height: "45vh" }}
+                >
                     <AppLoader />
                 </div>
             ) : (
-                <div className="kanban-board-container">
-                    <div className="kanban-board-menu-container d-flex d-justify-content-space-between mb-22">
-                        <div className="board-members-container">
-                            <span className="mr-13">
-                                <BoardVisibilityPopup
-                                    currentBoard={currentBoard}
-                                />
-                            </span>
-
-                            {currentBoard?.board_members?.map((members) => (
-                                <div
-                                    className="mr-15"
-                                    key={members.board_member_id}
-                                >
-                                    <ProfileImage
-                                        key={members.board_member_id}
-                                        image_url={
-                                            members.board_member_image_url
-                                        }
-                                        name={members.board_member_name}
+                <>
+                    <div className="kanban-board-container">
+                        <div className="kanban-board-menu-container d-flex d-justify-content-space-between mb-22">
+                            <div className="board-members-container">
+                                <span className="mr-13">
+                                    <BoardVisibilityPopup
+                                        currentBoard={currentBoard}
                                     />
-                                </div>
-                            ))}
-                            <KanbanActionPopup
-                                heading={"Invite to board"}
-                                subHeading={"Search users you want to invite"}
-                                trigger={
-                                    <span>
-                                        <Button
-                                            icon={
-                                                <PlusVector className="button-icon icon-color-white" />
+                                </span>
+
+                                {currentBoard?.board_members?.map((members) => (
+                                    <div
+                                        className="mr-15"
+                                        key={members.board_member_id}
+                                    >
+                                        <ProfileImage
+                                            key={members.board_member_id}
+                                            image_url={
+                                                members.board_member_image_url
                                             }
+                                            name={members.board_member_name}
                                         />
-                                    </span>
+                                    </div>
+                                ))}
+                                <KanbanActionPopup
+                                    heading={"Invite to board"}
+                                    subHeading={
+                                        "Search users you want to invite"
+                                    }
+                                    trigger={
+                                        <span>
+                                            <Button
+                                                icon={
+                                                    <PlusVector className="button-icon icon-color-white" />
+                                                }
+                                            />
+                                        </span>
+                                    }
+                                >
+                                    <UserFinder
+                                        onChange={(result) => {
+                                            console.log(result);
+                                            setUsersToInvite(result);
+                                        }}
+                                        onSearch={async (query) =>
+                                            searchUserForBoardAssignment(
+                                                currentBoard.board_id,
+                                                query
+                                            )
+                                        }
+                                    />
+                                    <div className="d-flex d-align-items-center d-justify-content-center mt-16">
+                                        <Button
+                                            label={"Invite"}
+                                            onClick={handleUserInvitation}
+                                        />
+                                    </div>
+                                </KanbanActionPopup>
+                            </div>
+                            <Button
+                                label={"Show menu"}
+                                buttonType={ButtonTypes.SECONDARY}
+                                icon={
+                                    <MoreHorizVector className="button-icon" />
                                 }
-                            >
-                                <UserFinder
-                                    onChange={(result) => {
-                                        console.log(result);
-                                        setUsersToInvite(result);
-                                    }}
-                                    onSearch={async (query) =>
-                                        searchUserForBoardAssignment(
-                                            currentBoard.board_id,
-                                            query
-                                        )
+                                onClick={() => setShowMenuModal(true)}
+                            />
+                        </div>
+                    </div>
+                    <div>
+                        <ul className="kanban-board-columns-container">
+                            {currentBoard?.columns?.map((columnObject) => (
+                                <li key={columnObject.column_id}>
+                                    <KanbanBoardColumns
+                                        boardId={board_id}
+                                        columnData={columnObject}
+                                        columnId={columnObject.column_id}
+                                    />
+                                </li>
+                            ))}
+                            <li>
+                                <KanbanActionButton
+                                    onClick={() =>
+                                        setShowCreateColumnModal(true)
+                                    }
+                                    label={"Add another column"}
+                                    icon={
+                                        <PlusVector className="button-icon" />
                                     }
                                 />
-                                <div className="d-flex d-align-items-center d-justify-content-center mt-16">
-                                    <Button
-                                        label={"Invite"}
-                                        onClick={handleUserInvitation}
-                                    />
-                                </div>
-                            </KanbanActionPopup>
-                        </div>
-                        <Button
-                            label={"Show menu"}
-                            buttonType={ButtonTypes.SECONDARY}
-                            icon={<MoreHorizVector className="button-icon" />}
-                            onClick={() => setShowMenuModal(true)}
-                        />
-                    </div>
-
-                    <ul className="kanban-board-columns-container">
-                        {currentBoard?.columns?.map((columnObject) => (
-                            <li key={columnObject.column_id}>
-                                <KanbanBoardColumns
-                                    boardId={board_id}
-                                    columnData={columnObject}
-                                    columnId={columnObject.column_id}
-                                />
                             </li>
-                        ))}
-                        <li>
-                            <KanbanActionButton
-                                onClick={() => setShowCreateColumnModal(true)}
-                                label={"Add another column"}
-                                icon={<PlusVector className="button-icon" />}
-                            />
-                        </li>
-                    </ul>
-                    <CreateColumnModal
-                        setShowCreateColumnModal={setShowCreateColumnModal}
-                        showCreateColumnModal={showCreateColumnModal}
-                        onSuccess={() => dispatch(fetchCurrentBoard(board_id))}
-                        onSubmit={(column_title, column_order_index) =>
-                            showGlobalLoader(
-                                () =>
-                                    createColumn(
-                                        board_id,
-                                        column_title,
-                                        column_order_index
-                                    ),
-                                "Added list"
-                            )
-                        }
-                        maxColumnOrderIndex={currentBoard?.columns?.reduce(
-                            (agg, columns) => {
-                                agg = Math.max(agg, columns.column_order_index);
-                                return agg;
-                            },
-                            0
-                        )}
-                    />
-                    <MenuModal
-                        isModalOpen={showMenuModal}
-                        setModalIsOpen={setShowMenuModal}
-                        currentBoard={currentBoard}
-                        adminUser={getAdminUser(
-                            currentBoard?.board_members,
-                            currentBoard?.created_by_user_id
-                        )}
-                    ></MenuModal>
-                </div>
+                        </ul>
+                    </div>
+                </>
             )}
-            <ToastContainer />
-        </div>
+            <CreateColumnModal
+                setShowCreateColumnModal={setShowCreateColumnModal}
+                showCreateColumnModal={showCreateColumnModal}
+                onSuccess={() => dispatch(fetchCurrentBoard(board_id))}
+                onSubmit={(column_title, column_order_index) =>
+                    showGlobalLoader(
+                        () =>
+                            createColumn(
+                                board_id,
+                                column_title,
+                                column_order_index
+                            ),
+                        "Added list"
+                    )
+                }
+                maxColumnOrderIndex={currentBoard?.columns?.reduce(
+                    (agg, columns) => {
+                        agg = Math.max(agg, columns.column_order_index);
+                        return agg;
+                    },
+                    0
+                )}
+            />
+            <MenuModal
+                isModalOpen={showMenuModal}
+                setModalIsOpen={setShowMenuModal}
+                currentBoard={currentBoard}
+                adminUser={getAdminUser(
+                    currentBoard?.board_members,
+                    currentBoard?.created_by_user_id
+                )}
+            ></MenuModal>
+        </>
     );
 };

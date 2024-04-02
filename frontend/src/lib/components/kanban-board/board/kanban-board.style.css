@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: row;
     list-style-type: none;
+    width: fit-content  ;
 }
 
 .kanban-board-columns-container li{

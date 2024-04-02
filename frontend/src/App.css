@@ -298,3 +298,15 @@ form .form-input-container {
 .mt-30{
     margin-top: 3rem;
 }
+
+.pos-relative{
+    position: relative;
+}
+
+.body-color{
+    background-color: #F8F9FD;
+}
+
+.w-fit-content{
+    width: fit-content
+}

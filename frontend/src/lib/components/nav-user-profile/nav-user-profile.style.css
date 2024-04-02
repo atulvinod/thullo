@@ -43,6 +43,7 @@
     transition: all 0.5s ease-in-out;
     border: 1px solid lightgrey;
     z-index: 1;
+    background-color: white;
 }
 
 .user-profile-actions {

@@ -151,7 +151,7 @@ export const KanbanBoard = () => {
                             />
                         </div>
                     </div>
-                    <div>
+                    <div className="pos-relative body-color w-fit-content">
                         <ul className="kanban-board-columns-container">
                             {currentBoard?.columns?.map((columnObject) => (
                                 <li key={columnObject.column_id}>

@@ -45,6 +45,7 @@ function configureDsn(client, dsn_config) {
             min: dsn_config.minConnections ? Number(dsn_config.minConnections) : 2,
             max: dsn_config.macConnections ? Number(dsn_config.maxConnections) : 10,
         },
+        searchPath: 'thullo',
     });
 }
 
